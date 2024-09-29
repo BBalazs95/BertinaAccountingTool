@@ -27,4 +27,19 @@ public partial class CSVInvoiceViewModel : ObservableObject
     public void CreateCSV()
     {
     }
+
+    [RelayCommand]
+    public void Save()
+    {
+        Properties.Settings.Default.LastSourceFilePath = SourceFilePath;
+        Properties.Settings.Default.LastRootFolder = RootFolder;
+        Properties.Settings.Default.Save();
+    }
+
+    [RelayCommand]
+    public void Load()
+    {
+        SourceFilePath = Properties.Settings.Default.LastSourceFilePath;
+        RootFolder = Properties.Settings.Default.LastRootFolder;
+    }
 }

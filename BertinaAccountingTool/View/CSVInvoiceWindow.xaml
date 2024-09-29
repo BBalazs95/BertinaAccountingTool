@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:BertinaAccountingTool.View"
         xmlns:vm="clr-namespace:BertinaAccountingTool.BusinessLogic.ViewModel"
         d:DataContext="{d:DesignInstance Type=vm:CSVInvoiceViewModel, IsDesignTimeCreatable=True}"
-        mc:Ignorable="d"
+        mc:Ignorable="d" Closing="Window_Closing"
         Title="CSVInvoiceWindow" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
@@ -24,11 +24,11 @@
         </Grid.RowDefinitions>
 
         <Label Content="Excel fájl:" Margin="3"/>
-        <TextBox Text="{Binding SourceFilePath, Mode=TwoWay}" Grid.Row="1" Margin="3"/>
+        <TextBox Text="{Binding SourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="3"/>
         <Button Content="Browse" Grid.Column="1" Grid.Row="1" Margin="3" Command="{Binding SourceBrowseCommand}"/>
 
         <Label Content="Kimeneti törzs mappa:" Grid.Row="2" Margin="3"/>
-        <TextBox Text="{Binding RootFolder, Mode=TwoWay}" Grid.Row="3" Margin="3"/>
+        <TextBox Text="{Binding RootFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Margin="3"/>
         <Button Content="Browse" Grid.Column="1" Grid.Row="3" Margin="3" Command="{Binding RootFolderBrowseCommand}"/>
 
         <Button Content="CSV Fájlok létrehozása" Grid.Column="3" Grid.RowSpan="2" Margin="3" Command="{Binding CreateCSVCommand}"/>
