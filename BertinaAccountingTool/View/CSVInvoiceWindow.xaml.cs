@@ -1,4 +1,5 @@
 ﻿using BertinaAccountingTool.BusinessLogic.ViewModel;
+using OfficeOpenXml;
 using System.Windows;
 
 namespace BertinaAccountingTool.View
@@ -11,6 +12,7 @@ namespace BertinaAccountingTool.View
         private CSVInvoiceViewModel viewModel;
         public CSVInvoiceWindow()
         {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             InitializeComponent();
             viewModel = new CSVInvoiceViewModel();
             DataContext = viewModel;

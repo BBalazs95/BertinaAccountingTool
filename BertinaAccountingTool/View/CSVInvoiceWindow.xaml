@@ -33,8 +33,7 @@
 
         <Button Content="CSV Fájlok létrehozása" Grid.Column="3" Grid.RowSpan="2" Margin="3" Command="{Binding CreateCSVCommand}"/>
 
-        <ScrollViewer Grid.Row="4" Grid.ColumnSpan="4">
-            
+        <ScrollViewer Grid.Row="4" Grid.ColumnSpan="4" Margin="0,3,0,3">
         </ScrollViewer>
     </Grid>
 </Window>
