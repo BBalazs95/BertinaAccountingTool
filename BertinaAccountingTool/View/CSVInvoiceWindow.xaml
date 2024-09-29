@@ -7,10 +7,10 @@
         xmlns:vm="clr-namespace:BertinaAccountingTool.BusinessLogic.ViewModel"
         d:DataContext="{d:DesignInstance Type=vm:CSVInvoiceViewModel, IsDesignTimeCreatable=True}"
         mc:Ignorable="d" Closing="Window_Closing"
-        Title="CSVInvoiceWindow" Height="450" Width="800">
+        Title="CSVInvoiceWindow" Height="800" Width="1200">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="650"/>
             <ColumnDefinition Width="70"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="150"/>
