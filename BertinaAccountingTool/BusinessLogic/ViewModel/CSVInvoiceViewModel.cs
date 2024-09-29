@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Win32;
 
 namespace BertinaAccountingTool.BusinessLogic.ViewModel;
 
@@ -14,13 +15,28 @@ public partial class CSVInvoiceViewModel : ObservableObject
     [RelayCommand]
     public void SourceBrowse()
     {
+        OpenFileDialog openFileDialog = new();
+        openFileDialog.Filter = "Excel Files|*.xls;*.xlsx";
+        openFileDialog.Title = "Válasz egy excel fájlt";
+        openFileDialog.Multiselect = false;
 
+        if (openFileDialog.ShowDialog() == true)
+        {
+            SourceFilePath = openFileDialog.FileName;
+        }
     }
 
     [RelayCommand]
     public void RootFolderBrowse()
     {
+        OpenFolderDialog openFolderDialog = new();
+        openFolderDialog.Title = "Válasz egy törzs könyvtárat";
+        openFolderDialog.Multiselect = false;
 
+        if (openFolderDialog.ShowDialog() == true)
+        {
+            RootFolder = openFolderDialog.FolderName;
+        }
     }
 
     [RelayCommand]
