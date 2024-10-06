@@ -1,6 +1,7 @@
 ﻿using BertinaAccountingTool.BusinessLogic.ViewModel;
 using OfficeOpenXml;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace BertinaAccountingTool.View
 {
@@ -25,6 +26,13 @@ namespace BertinaAccountingTool.View
         {
             if (viewModel.SaveCommand.CanExecute(null))
                 viewModel.SaveCommand.Execute(null);
+        }
+
+        private void ScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+        {
+            var scroller = sender as ScrollViewer;
+            scroller?.ScrollToVerticalOffset(scroller.VerticalOffset - e.Delta / 3);
+            e.Handled = true;
         }
     }
 }
