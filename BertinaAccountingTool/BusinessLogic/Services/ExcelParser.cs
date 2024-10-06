@@ -61,11 +61,37 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             return res;
         }
 
+        internal static Dictionary<string, List<Invoice>> ParseBookingExcel(FileInfo fileInfo)
+        {
+            var res = new Dictionary<string, List<Invoice>>();
+            using ExcelPackage package = new ExcelPackage(fileInfo);
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+
+            int rows = worksheet.Dimension.Rows;
+            for (int row = 2; row <= rows; row++)
+            {
+                var compName = worksheet.Cells[row, 5].GetValue<string>() ?? Constants.errorValue;
+                var invoice = new Invoice(
+                    companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 5].GetValue<string>())),
+                    name: "Booking.com",
+                    accountNumber: "108000077000000014509011",
+                    value: CleareValue(worksheet.Cells[row, 4].GetValue<double>()),
+                    message: $"{worksheet.Cells[row, 2].GetValue<string>()}, {worksheet.Cells[row, 3].GetValue<string>()}");
+
+                if (!res.ContainsKey(compName))
+                    res[compName] = new List<Invoice>();
+
+                res[compName].Add(invoice);
+            }
+
+            return res;
+        }
+
         internal static Dictionary<string, List<Invoice>> ParseSalaryAndTaxExcel(FileInfo fileInfo)
         {
             var res = new Dictionary<string, List<Invoice>>();
             using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
             int rows = worksheet.Dimension.Rows;
             for (int row = 2; row <= rows; row++)
