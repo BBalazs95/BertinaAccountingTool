@@ -8,6 +8,17 @@
         d:DataContext="{d:DesignInstance Type=vm:CSVInvoiceViewModel, IsDesignTimeCreatable=True}"
         mc:Ignorable="d" Closing="Window_Closing"
         Title="CSVInvoiceWindow" Height="800" Width="1200">
+    <Window.Resources>
+        <Style TargetType="DataGrid" x:Key="CustomDataGridStyle">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="False"/>
+            <Setter Property="SelectionMode" Value="Extended"/>
+            <Setter Property="SelectionUnit" Value="Cell"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="AlternatingRowBackground" Value="LightGray"/>
+        </Style>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
@@ -58,6 +69,71 @@
         <Button Content="CSV Fájlok létrehozása" Grid.Row="12" Grid.ColumnSpan="2" Margin="3" Command="{Binding CreateCSVCommand}"/>
 
         <ScrollViewer Grid.Column="2" Grid.RowSpan="99" Margin="0,3,0,3">
+            <ListBox ItemsSource="{Binding Data}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Expander IsExpanded="False" Header="{Binding Name}" Width="750">
+                            <StackPanel>
+                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Tulaj utalások">
+                                    <DataGrid Margin="20,0,0,0" ItemsSource="{Binding OwnerInvoices}" Style="{StaticResource CustomDataGridStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Terhelendő számla" Binding="{Binding CompanyAccountNumber}" />
+                                            <DataGridTextColumn Header="Kedvezményezett neve" Binding="{Binding Name}" />
+                                            <DataGridTextColumn Header="Kedvezményezett számlaszám" Binding="{Binding AccountNumber}" />
+                                            <DataGridTextColumn Header="Összeg" Binding="{Binding Value}" />
+                                            <DataGridTextColumn Header="Közlemény" Binding="{Binding Message}" Width="*" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Expander>
+                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Szolgáltatói utalások">
+                                    <DataGrid Margin="20,0,0,0" ItemsSource="{Binding ServiceInvoices}" Style="{StaticResource CustomDataGridStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Terhelendő számla" Binding="{Binding CompanyAccountNumber}" />
+                                            <DataGridTextColumn Header="Kedvezményezett neve" Binding="{Binding Name}" />
+                                            <DataGridTextColumn Header="Kedvezményezett számlaszám" Binding="{Binding AccountNumber}" />
+                                            <DataGridTextColumn Header="Összeg" Binding="{Binding Value}" />
+                                            <DataGridTextColumn Header="Közlemény" Binding="{Binding Message}" Width="*" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Expander>
+                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Booking utalások">
+                                    <DataGrid Margin="20,0,0,0" ItemsSource="{Binding BookingInvoices}" Style="{StaticResource CustomDataGridStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Terhelendő számla" Binding="{Binding CompanyAccountNumber}" />
+                                            <DataGridTextColumn Header="Kedvezményezett neve" Binding="{Binding Name}" />
+                                            <DataGridTextColumn Header="Kedvezményezett számlaszám" Binding="{Binding AccountNumber}" />
+                                            <DataGridTextColumn Header="Összeg" Binding="{Binding Value}" />
+                                            <DataGridTextColumn Header="Közlemény" Binding="{Binding Message}" Width="*" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Expander>
+                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Bérek+Adók utalások">
+                                    <DataGrid Margin="20,0,0,0" ItemsSource="{Binding SalaryAndTaxInvoices}" Style="{StaticResource CustomDataGridStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Terhelendő számla" Binding="{Binding CompanyAccountNumber}" />
+                                            <DataGridTextColumn Header="Kedvezményezett neve" Binding="{Binding Name}" />
+                                            <DataGridTextColumn Header="Kedvezményezett számlaszám" Binding="{Binding AccountNumber}" />
+                                            <DataGridTextColumn Header="Összeg" Binding="{Binding Value}" />
+                                            <DataGridTextColumn Header="Közlemény" Binding="{Binding Message}" Width="*" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Expander>
+                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Költség számlák utalások">
+                                    <DataGrid Margin="20,0,0,0" ItemsSource="{Binding ExpenseInvoices}" Style="{StaticResource CustomDataGridStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Terhelendő számla" Binding="{Binding CompanyAccountNumber}" />
+                                            <DataGridTextColumn Header="Kedvezményezett neve" Binding="{Binding Name}" />
+                                            <DataGridTextColumn Header="Kedvezményezett számlaszám" Binding="{Binding AccountNumber}" />
+                                            <DataGridTextColumn Header="Összeg" Binding="{Binding Value}" />
+                                            <DataGridTextColumn Header="Közlemény" Binding="{Binding Message}" Width="*" />
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+                                </Expander>
+                            </StackPanel>
+                        </Expander>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </ScrollViewer>
     </Grid>
 </Window>

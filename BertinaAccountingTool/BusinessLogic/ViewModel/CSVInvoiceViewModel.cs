@@ -1,5 +1,4 @@
 ﻿using BertinaAccountingTool.BusinessLogic.Services;
-using BertinaAccountingTool.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
@@ -8,10 +7,10 @@ using System.Windows.Controls;
 
 namespace BertinaAccountingTool.BusinessLogic.ViewModel;
 
-public partial class CSVInvoiceViewModel : ObservableObject
+internal partial class CSVInvoiceViewModel : ObservableObject
 {
-    private Dictionary<string, Company> parsedData = new();
-
+    [ObservableProperty]
+    private List<CompanyViewModel> data = new();
     [ObservableProperty]
     private string ownerSourceFilePath = string.Empty;
     [ObservableProperty]
@@ -82,7 +81,6 @@ public partial class CSVInvoiceViewModel : ObservableObject
 
     partial void OnServiceSourceFilePathChanged(string value)
     {
-        parsedData.Clear();
         FileInfo fileInfo;
         try
         {
@@ -100,12 +98,22 @@ public partial class CSVInvoiceViewModel : ObservableObject
         var invoiceType = fileInfo.Name[from..to];
         var invoicesForCompanies = ExcelParser.ParseServiceExcel(fileInfo);
 
-        foreach (var invoices in invoicesForCompanies)
+        if (invoicesForCompanies.Keys.Count != Data.Count)
         {
-            if (!parsedData.ContainsKey(invoices.Key))
-                parsedData[invoices.Key] = new();
+            //TODO
+        }
 
-            parsedData[invoices.Key].ServiceInvoices = invoices.Value;
+        foreach (var invoice in invoicesForCompanies)
+        {
+            var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
+            if (company == null)
+            {
+                company = new CompanyViewModel(invoice.Key);
+                Data.Add(company);
+            }
+
+            company.ServiceInvoices.Clear();
+            invoice.Value.ForEach(c => company.ServiceInvoices.Add((InvoiceViewModel)c));
         }
     }
 }
