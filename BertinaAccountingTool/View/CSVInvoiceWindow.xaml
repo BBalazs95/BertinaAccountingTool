@@ -14,7 +14,7 @@
             <Setter Property="CanUserAddRows" Value="False"/>
             <Setter Property="IsReadOnly" Value="False"/>
             <Setter Property="SelectionMode" Value="Extended"/>
-            <Setter Property="SelectionUnit" Value="Cell"/>
+            <Setter Property="SelectionUnit" Value="FullRow"/>
             <Setter Property="Margin" Value="10"/>
             <Setter Property="AlternatingRowBackground" Value="LightGray"/>
         </Style>
@@ -23,6 +23,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
             <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -51,7 +52,7 @@
         <Label Content="Cég számlaszámok excel fájl:" Grid.Row="2" Margin="3"/>
         <TextBox x:Name="tbCompanyAccountNumbers" Text="{Binding CompanyAccountNumbersSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Margin="3"/>
         <Button Content="Browse" Grid.Column="1" Grid.Row="3" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbCompanyAccountNumbers}"/>
-        
+
         <Label Content="Tulaj utalás excel fájl:" Grid.Row="4" Margin="3"/>
         <TextBox x:Name="tbOwner" Text="{Binding OwnerSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Margin="3"/>
         <Button Content="Browse" Grid.Column="1" Grid.Row="5" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbOwner}"/>
@@ -74,13 +75,16 @@
 
         <Button Content="CSV Fájlok létrehozása" Grid.Row="14" Grid.ColumnSpan="2" Margin="3" Command="{Binding CreateCSVCommand}"/>
 
-        <ScrollViewer Grid.Column="2" Grid.RowSpan="99" Margin="0,3,0,3" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-            <ListBox ItemsSource="{Binding Data}">
+        <Button Grid.Column="2" Margin="3" Content="Összes utalások" Command="{Binding ShowAllInvoiceCommand}" CommandParameter="{Binding ElementName=blInvoices}"/>
+        <Button Grid.Column="3" Margin="3" Content="Hibás utalások" Command="{Binding ShowErrorInvoiceCommand}" CommandParameter="{Binding ElementName=blInvoices}"/>
+
+        <ScrollViewer Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="99" Margin="0,3,0,3" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+            <ListBox x:Name="blInvoices" ItemsSource="{Binding Data}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
-                        <Expander IsExpanded="False" Header="{Binding Name}" Width="750">
+                        <Expander IsExpanded="False" Header="{Binding Name}" Width="750" Visibility="{Binding CompanyVisibility}">
                             <StackPanel>
-                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Tulaj utalások">
+                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Tulaj utalások" Visibility="{Binding OwnerVisibility}">
                                     <DataGrid Margin="20,0,0,0" ItemsSource="{Binding OwnerInvoices}" Style="{StaticResource CustomDataGridStyle}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Terhelendő számla" Binding="{Binding CompanyAccountNumber}" />
@@ -91,7 +95,7 @@
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Expander>
-                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Szolgáltatói utalások">
+                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Szolgáltatói utalások" Visibility="{Binding ServiceVisibility}">
                                     <DataGrid Margin="20,0,0,0" ItemsSource="{Binding ServiceInvoices}" Style="{StaticResource CustomDataGridStyle}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Terhelendő számla" Binding="{Binding CompanyAccountNumber}" />
@@ -102,7 +106,7 @@
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Expander>
-                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Booking utalások">
+                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Booking utalások" Visibility="{Binding BookingVisibility}">
                                     <DataGrid Margin="20,0,0,0" ItemsSource="{Binding BookingInvoices}" Style="{StaticResource CustomDataGridStyle}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Terhelendő számla" Binding="{Binding CompanyAccountNumber}" />
@@ -113,7 +117,7 @@
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Expander>
-                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Bérek+Adók utalások">
+                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Bérek+Adók utalások" Visibility="{Binding SalaryAndTaxVisibility}">
                                     <DataGrid Margin="20,0,0,0" ItemsSource="{Binding SalaryAndTaxInvoices}" Style="{StaticResource CustomDataGridStyle}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Terhelendő számla" Binding="{Binding CompanyAccountNumber}" />
@@ -124,7 +128,7 @@
                                         </DataGrid.Columns>
                                     </DataGrid>
                                 </Expander>
-                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Költség számlák utalások">
+                                <Expander Margin="20,0,0,0" IsExpanded="False" Header="Költség számlák utalások" Visibility="{Binding ExpenseVisibility}">
                                     <DataGrid Margin="20,0,0,0" ItemsSource="{Binding ExpenseInvoices}" Style="{StaticResource CustomDataGridStyle}">
                                         <DataGrid.Columns>
                                             <DataGridTextColumn Header="Terhelendő számla" Binding="{Binding CompanyAccountNumber}" />

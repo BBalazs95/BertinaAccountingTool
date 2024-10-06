@@ -1,4 +1,5 @@
 ﻿using BertinaAccountingTool.BusinessLogic.Services;
+using BertinaAccountingTool.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
@@ -12,6 +13,8 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 {
     [ObservableProperty]
     private ObservableCollection<CompanyViewModel> data = new();
+    [ObservableProperty]
+    private ObservableCollection<CompanyViewModel> errorData = new();
     [ObservableProperty]
     private string companyAccountNumbersSourceFilePath = string.Empty;
     [ObservableProperty]
@@ -51,14 +54,27 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         foreach (var invoice in invoicesForCompanies)
         {
             var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
+            var errorCompany = ErrorData.FirstOrDefault(c => c.Name == invoice.Key);
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
                 Data.Add(company);
             }
+            if (errorCompany == null)
+            {
+                errorCompany = new CompanyViewModel(invoice.Key);
+                ErrorData.Add(errorCompany);
+            }
 
             company.BookingInvoices.Clear();
-            invoice.Value.ForEach(c => company.BookingInvoices.Add((InvoiceViewModel)c));
+            errorCompany.BookingInvoices.Clear();
+            invoice.Value.ForEach(c =>
+            {
+                var invoice = (InvoiceViewModel)c;
+                company.BookingInvoices.Add(invoice);
+                if (HasError(invoice))
+                    errorCompany.BookingInvoices.Add(invoice);
+            });
         }
     }
 
@@ -86,14 +102,27 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         foreach (var invoice in invoicesForCompanies)
         {
             var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
+            var errorCompany = ErrorData.FirstOrDefault(c => c.Name == invoice.Key);
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
                 Data.Add(company);
             }
+            if (errorCompany == null)
+            {
+                errorCompany = new CompanyViewModel(invoice.Key);
+                ErrorData.Add(errorCompany);
+            }
 
             company.SalaryAndTaxInvoices.Clear();
-            invoice.Value.ForEach(c => company.SalaryAndTaxInvoices.Add((InvoiceViewModel)c));
+            errorCompany.SalaryAndTaxInvoices.Clear();
+            invoice.Value.ForEach(c =>
+            {
+                var invoice = (InvoiceViewModel)c;
+                company.SalaryAndTaxInvoices.Add(invoice);
+                if (HasError(invoice))
+                    errorCompany.SalaryAndTaxInvoices.Add(invoice);
+            });
         }
     }
 
@@ -121,14 +150,27 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         foreach (var invoice in invoicesForCompanies)
         {
             var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
+            var errorCompany = ErrorData.FirstOrDefault(c => c.Name == invoice.Key);
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
                 Data.Add(company);
             }
+            if (errorCompany == null)
+            {
+                errorCompany = new CompanyViewModel(invoice.Key);
+                ErrorData.Add(errorCompany);
+            }
 
             company.ExpenseInvoices.Clear();
-            invoice.Value.ForEach(c => company.ExpenseInvoices.Add((InvoiceViewModel)c));
+            errorCompany.ExpenseInvoices.Clear();
+            invoice.Value.ForEach(c =>
+            {
+                var invoice = (InvoiceViewModel)c;
+                company.ExpenseInvoices.Add(invoice);
+                if (HasError(invoice))
+                    errorCompany.ExpenseInvoices.Add(invoice);
+            });
         }
     }
 
@@ -156,14 +198,27 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         foreach (var invoice in invoicesForCompanies)
         {
             var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
+            var errorCompany = ErrorData.FirstOrDefault(c => c.Name == invoice.Key);
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
                 Data.Add(company);
             }
+            if (errorCompany == null)
+            {
+                errorCompany = new CompanyViewModel(invoice.Key);
+                ErrorData.Add(errorCompany);
+            }
 
             company.OwnerInvoices.Clear();
-            invoice.Value.ForEach(c => company.OwnerInvoices.Add((InvoiceViewModel)c));
+            errorCompany.OwnerInvoices.Clear();
+            invoice.Value.ForEach(c =>
+            {
+                var invoice = (InvoiceViewModel)c;
+                company.OwnerInvoices.Add(invoice);
+                if (HasError(invoice))
+                    errorCompany.OwnerInvoices.Add(invoice);
+            });
         }
     }
 
@@ -191,14 +246,27 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         foreach (var invoice in invoicesForCompanies)
         {
             var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
+            var errorCompany = ErrorData.FirstOrDefault(c => c.Name == invoice.Key);
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
                 Data.Add(company);
             }
+            if (errorCompany == null)
+            {
+                errorCompany = new CompanyViewModel(invoice.Key);
+                ErrorData.Add(errorCompany);
+            }
 
             company.ServiceInvoices.Clear();
-            invoice.Value.ForEach(c => company.ServiceInvoices.Add((InvoiceViewModel)c));
+            errorCompany.ServiceInvoices.Clear();
+            invoice.Value.ForEach(c =>
+            {
+                var invoice = (InvoiceViewModel)c;
+                company.ServiceInvoices.Add(invoice);
+                if (HasError(invoice))
+                    errorCompany.ServiceInvoices.Add(invoice);
+            });
         }
     }
 
@@ -222,6 +290,18 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         OnBookingSourceFilePathChanged(ServiceSourceFilePath);
         OnSalaryAndTaxSourceFilePathChanged(ServiceSourceFilePath);
         OnExpenseSourceFilePathChanged(ServiceSourceFilePath);
+    }
+
+    [RelayCommand]
+    public void ShowAllInvoice(ListBox listBox)
+    {
+        listBox.ItemsSource = Data;
+    }
+
+    [RelayCommand]
+    public void ShowErrorInvoice(ListBox listBox)
+    {
+        listBox.ItemsSource = ErrorData;
     }
 
     [RelayCommand]
@@ -279,5 +359,14 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         SalaryAndTaxSourceFilePath = Properties.Settings.Default.LastSalaryAndTaxSourceFilePath;
         ExpenseSourceFilePath = Properties.Settings.Default.LastExpenseSourceFilePath;
         RootFolder = Properties.Settings.Default.LastRootFolderPath;
+    }
+
+    private bool HasError(InvoiceViewModel invoice)
+    {
+        return string.IsNullOrWhiteSpace(invoice.Value) || invoice.Value == Constants.errorValue ||
+               string.IsNullOrWhiteSpace(invoice.AccountNumber) || invoice.AccountNumber == Constants.errorValue ||
+               string.IsNullOrWhiteSpace(invoice.CompanyAccountNumber) || invoice.CompanyAccountNumber == Constants.errorValue ||
+               string.IsNullOrWhiteSpace(invoice.Name) || invoice.Name == Constants.errorValue ||
+               string.IsNullOrWhiteSpace(invoice.Message) || invoice.Message == Constants.errorValue;
     }
 }
