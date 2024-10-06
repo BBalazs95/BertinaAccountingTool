@@ -10,12 +10,20 @@
         Title="CSVInvoiceWindow" Height="800" Width="1200">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="650"/>
-            <ColumnDefinition Width="70"/>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="50"/>
             <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="150"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -23,17 +31,33 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Label Content="Excel fájl:" Margin="3"/>
-        <TextBox Text="{Binding SourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="3"/>
-        <Button Content="Browse" Grid.Column="1" Grid.Row="1" Margin="3" Command="{Binding SourceBrowseCommand}"/>
+        <Label Content="Kimeneti törzs mappa:" Margin="3"/>
+        <TextBox Text="{Binding RootFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="3"/>
+        <Button Content="Browse" Grid.Column="1" Grid.Row="1" Margin="3" Command="{Binding RootFolderBrowseCommand}"/>
 
-        <Label Content="Kimeneti törzs mappa:" Grid.Row="2" Margin="3"/>
-        <TextBox Text="{Binding RootFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Margin="3"/>
-        <Button Content="Browse" Grid.Column="1" Grid.Row="3" Margin="3" Command="{Binding RootFolderBrowseCommand}"/>
+        <Label Content="Tulaj utalás excel fájl:" Grid.Row="2" Margin="3"/>
+        <TextBox x:Name="tbOwner" Text="{Binding OwnerSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Margin="3"/>
+        <Button Content="Browse" Grid.Column="1" Grid.Row="3" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbOwner}"/>
 
-        <Button Content="CSV Fájlok létrehozása" Grid.Column="3" Grid.RowSpan="2" Margin="3" Command="{Binding CreateCSVCommand}"/>
+        <Label Content="Szolgáltatói utalás excel fájl:" Grid.Row="4" Margin="3"/>
+        <TextBox x:Name="tbService" Text="{Binding ServiceSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Margin="3"/>
+        <Button Content="Browse" Grid.Column="1" Grid.Row="5" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbService}"/>
 
-        <ScrollViewer Grid.Row="4" Grid.ColumnSpan="4" Margin="0,3,0,3">
+        <Label Content="Booking utalás excel fájl:" Grid.Row="6" Margin="3"/>
+        <TextBox x:Name="tbBooking" Text="{Binding BookingSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="7" Margin="3"/>
+        <Button Content="Browse" Grid.Column="1" Grid.Row="7" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbBooking}"/>
+
+        <Label Content="Bérek+Adók utalás excel fájl:" Grid.Row="8" Margin="3"/>
+        <TextBox x:Name="tbSalaryAndTax" Text="{Binding SalaryAndTaxSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="9" Margin="3"/>
+        <Button Content="Browse" Grid.Column="1" Grid.Row="9" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbSalaryAndTax}"/>
+
+        <Label Content="Költség számlák excel fájl:" Grid.Row="10" Margin="3"/>
+        <TextBox x:Name="tbExpense" Text="{Binding ExpenseSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="11" Margin="3"/>
+        <Button Content="Browse" Grid.Column="1" Grid.Row="11" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbExpense}"/>
+
+        <Button Content="CSV Fájlok létrehozása" Grid.Row="12" Grid.ColumnSpan="2" Margin="3" Command="{Binding CreateCSVCommand}"/>
+
+        <ScrollViewer Grid.Column="2" Grid.RowSpan="99" Margin="0,3,0,3">
         </ScrollViewer>
     </Grid>
 </Window>

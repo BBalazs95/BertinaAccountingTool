@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using System.IO;
+using System.Windows.Controls;
 
 namespace BertinaAccountingTool.BusinessLogic.ViewModel;
 
@@ -12,21 +13,29 @@ public partial class CSVInvoiceViewModel : ObservableObject
     private Dictionary<string, Dictionary<string, List<Invoice>>> parsedData = new();
 
     [ObservableProperty]
-    private string sourceFilePath = string.Empty;
+    private string ownerSourceFilePath = string.Empty;
+    [ObservableProperty]
+    private string serviceSourceFilePath = string.Empty;
+    [ObservableProperty]
+    private string bookingSourceFilePath = string.Empty;
+    [ObservableProperty]
+    private string salaryAndTaxSourceFilePath = string.Empty;
+    [ObservableProperty]
+    private string expenseSourceFilePath = string.Empty;
     [ObservableProperty]
     private string rootFolder = string.Empty;
 
     [RelayCommand]
-    public void SourceBrowse()
+    public void SourceBrowse(object textBox)
     {
         OpenFileDialog openFileDialog = new();
         openFileDialog.Filter = "Excel Files|*.xls;*.xlsx";
         openFileDialog.Title = "Válasz egy excel fájlt";
-        openFileDialog.Multiselect = true;
+        openFileDialog.Multiselect = false;
 
-        if (openFileDialog.ShowDialog() == true)
+        if (openFileDialog.ShowDialog() == true && textBox is TextBox box)
         {
-            SourceFilePath = string.Join('#', openFileDialog.FileNames);
+            box.Text = openFileDialog.FileName;
         }
     }
 
@@ -51,7 +60,6 @@ public partial class CSVInvoiceViewModel : ObservableObject
     [RelayCommand]
     public void Save()
     {
-        Properties.Settings.Default.LastSourceFilePath = SourceFilePath;
         Properties.Settings.Default.LastRootFolder = RootFolder;
         Properties.Settings.Default.Save();
     }
@@ -59,11 +67,10 @@ public partial class CSVInvoiceViewModel : ObservableObject
     [RelayCommand]
     public void Load()
     {
-        SourceFilePath = Properties.Settings.Default.LastSourceFilePath;
         RootFolder = Properties.Settings.Default.LastRootFolder;
     }
 
-    partial void OnSourceFilePathChanged(string value)
+    partial void OnServiceSourceFilePathChanged(string value)
     {
         parsedData.Clear();
         List<FileInfo> fileInfos = new();
