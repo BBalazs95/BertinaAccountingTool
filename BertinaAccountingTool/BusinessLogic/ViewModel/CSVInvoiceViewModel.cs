@@ -26,6 +26,41 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     [ObservableProperty]
     private string rootFolder = string.Empty;
 
+    partial void OnOwnerSourceFilePathChanged(string value)
+    {
+        FileInfo fileInfo;
+        try
+        {
+            if (!(value.EndsWith(".xls") || value.EndsWith(".xlsx")) || !File.Exists(value))
+                throw new Exception();
+            fileInfo = new FileInfo(value);
+        }
+        catch
+        {
+            return;
+        }
+
+        var invoicesForCompanies = ExcelParser.ParseOwnerExcel(fileInfo);
+
+        if (invoicesForCompanies.Keys.Count != Data.Count)
+        {
+            //TODO
+        }
+
+        foreach (var invoice in invoicesForCompanies)
+        {
+            var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
+            if (company == null)
+            {
+                company = new CompanyViewModel(invoice.Key);
+                Data.Add(company);
+            }
+
+            company.OwnerInvoices.Clear();
+            invoice.Value.ForEach(c => company.OwnerInvoices.Add((InvoiceViewModel)c));
+        }
+    }
+
     partial void OnServiceSourceFilePathChanged(string value)
     {
         FileInfo fileInfo;
