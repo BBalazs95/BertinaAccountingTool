@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,15 +13,15 @@ internal partial class CompanyViewModel : ObservableObject
     [ObservableProperty]
     private string name;
     [ObservableProperty]
-    private List<InvoiceViewModel> ownerInvoices=new();
+    private ObservableCollection<InvoiceViewModel> ownerInvoices=new();
     [ObservableProperty]
-    private List<InvoiceViewModel> serviceInvoices = new();
+    private ObservableCollection<InvoiceViewModel> serviceInvoices = new();
     [ObservableProperty]
-    private List<InvoiceViewModel> bookingInvoices = new();
+    private ObservableCollection<InvoiceViewModel> bookingInvoices = new();
     [ObservableProperty]
-    private List<InvoiceViewModel> salaryAndTaxInvoices = new();
+    private ObservableCollection<InvoiceViewModel> salaryAndTaxInvoices = new();
     [ObservableProperty]
-    private List<InvoiceViewModel> expenseInvoices = new();
+    private ObservableCollection<InvoiceViewModel> expenseInvoices = new();
 
     public CompanyViewModel(string name)
     {

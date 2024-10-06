@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Controls;
 
@@ -10,7 +11,7 @@ namespace BertinaAccountingTool.BusinessLogic.ViewModel;
 internal partial class CSVInvoiceViewModel : ObservableObject
 {
     [ObservableProperty]
-    private List<CompanyViewModel> data = new();
+    private ObservableCollection<CompanyViewModel> data = new();
     [ObservableProperty]
     private string companyAccountNumbersSourceFilePath = string.Empty;
     [ObservableProperty]
