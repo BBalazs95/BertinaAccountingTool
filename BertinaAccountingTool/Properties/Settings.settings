@@ -20,5 +20,8 @@
     <Setting Name="LastRootFolderPath" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="LastCompanyAccountNumbersSourceFilePath" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

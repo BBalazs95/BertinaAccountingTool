@@ -12,6 +12,8 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     [ObservableProperty]
     private List<CompanyViewModel> data = new();
     [ObservableProperty]
+    private string companyAccountNumbersSourceFilePath = string.Empty;
+    [ObservableProperty]
     private string ownerSourceFilePath = string.Empty;
     [ObservableProperty]
     private string serviceSourceFilePath = string.Empty;
@@ -23,6 +25,59 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     private string expenseSourceFilePath = string.Empty;
     [ObservableProperty]
     private string rootFolder = string.Empty;
+
+    partial void OnServiceSourceFilePathChanged(string value)
+    {
+        FileInfo fileInfo;
+        try
+        {
+            if (!(value.EndsWith(".xls") || value.EndsWith(".xlsx")) || !File.Exists(value))
+                throw new Exception();
+            fileInfo = new FileInfo(value);
+        }
+        catch
+        {
+            return;
+        }
+
+        var invoicesForCompanies = ExcelParser.ParseServiceExcel(fileInfo);
+
+        if (invoicesForCompanies.Keys.Count != Data.Count)
+        {
+            //TODO
+        }
+
+        foreach (var invoice in invoicesForCompanies)
+        {
+            var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
+            if (company == null)
+            {
+                company = new CompanyViewModel(invoice.Key);
+                Data.Add(company);
+            }
+
+            company.ServiceInvoices.Clear();
+            invoice.Value.ForEach(c => company.ServiceInvoices.Add((InvoiceViewModel)c));
+        }
+    }
+
+    partial void OnCompanyAccountNumbersSourceFilePathChanged(string value)
+    {
+        FileInfo fileInfo;
+        try
+        {
+            if (!(value.EndsWith(".xls") || value.EndsWith(".xlsx")) || !File.Exists(value))
+                throw new Exception();
+            fileInfo = new FileInfo(value);
+        }
+        catch
+        {
+            return;
+        }
+
+        ExcelParser.SetCompanyAccountNumbers(fileInfo);
+        OnServiceSourceFilePathChanged(ServiceSourceFilePath);
+    }
 
     [RelayCommand]
     public void SourceBrowse(object textBox)
@@ -59,6 +114,7 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     [RelayCommand]
     public void Save()
     {
+        Properties.Settings.Default.LastCompanyAccountNumbersSourceFilePath = CompanyAccountNumbersSourceFilePath;
         Properties.Settings.Default.LastOwnerSourceFilePath = OwnerSourceFilePath;
         Properties.Settings.Default.LastServiceSourceFilePath = ServiceSourceFilePath;
         Properties.Settings.Default.LastBookingSourceFilePath = BookingSourceFilePath;
@@ -71,49 +127,12 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     [RelayCommand]
     public void Load()
     {
+        CompanyAccountNumbersSourceFilePath = Properties.Settings.Default.LastCompanyAccountNumbersSourceFilePath;
         OwnerSourceFilePath = Properties.Settings.Default.LastOwnerSourceFilePath;
         ServiceSourceFilePath = Properties.Settings.Default.LastServiceSourceFilePath;
         BookingSourceFilePath = Properties.Settings.Default.LastBookingSourceFilePath;
         SalaryAndTaxSourceFilePath = Properties.Settings.Default.LastSalaryAndTaxSourceFilePath;
         ExpenseSourceFilePath = Properties.Settings.Default.LastExpenseSourceFilePath;
         RootFolder = Properties.Settings.Default.LastRootFolderPath;
-    }
-
-    partial void OnServiceSourceFilePathChanged(string value)
-    {
-        FileInfo fileInfo;
-        try
-        {
-            if (!(value.EndsWith(".xls") || value.EndsWith(".xlsx")) || !File.Exists(value))
-                throw new Exception();
-            fileInfo = new FileInfo(value);
-        }
-        catch
-        {
-            return;
-        }
-
-        var from = fileInfo.Name.IndexOf('_') + 1;
-        var to = fileInfo.Name.LastIndexOf(".");
-        var invoiceType = fileInfo.Name[from..to];
-        var invoicesForCompanies = ExcelParser.ParseServiceExcel(fileInfo);
-
-        if (invoicesForCompanies.Keys.Count != Data.Count)
-        {
-            //TODO
-        }
-
-        foreach (var invoice in invoicesForCompanies)
-        {
-            var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
-            if (company == null)
-            {
-                company = new CompanyViewModel(invoice.Key);
-                Data.Add(company);
-            }
-
-            company.ServiceInvoices.Clear();
-            invoice.Value.ForEach(c => company.ServiceInvoices.Add((InvoiceViewModel)c));
-        }
     }
 }
