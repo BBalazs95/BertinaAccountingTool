@@ -60,14 +60,24 @@ public partial class CSVInvoiceViewModel : ObservableObject
     [RelayCommand]
     public void Save()
     {
-        Properties.Settings.Default.LastRootFolder = RootFolder;
+        Properties.Settings.Default.LastOwnerSourceFilePath = OwnerSourceFilePath;
+        Properties.Settings.Default.LastServiceSourceFilePath = ServiceSourceFilePath;
+        Properties.Settings.Default.LastBookingSourceFilePath = BookingSourceFilePath;
+        Properties.Settings.Default.LastSalaryAndTaxSourceFilePath = SalaryAndTaxSourceFilePath;
+        Properties.Settings.Default.LastExpenseSourceFilePath = ExpenseSourceFilePath;
+        Properties.Settings.Default.LastRootFolderPath = RootFolder;
         Properties.Settings.Default.Save();
     }
 
     [RelayCommand]
     public void Load()
     {
-        RootFolder = Properties.Settings.Default.LastRootFolder;
+        OwnerSourceFilePath = Properties.Settings.Default.LastOwnerSourceFilePath;
+        ServiceSourceFilePath = Properties.Settings.Default.LastServiceSourceFilePath;
+        BookingSourceFilePath = Properties.Settings.Default.LastBookingSourceFilePath;
+        SalaryAndTaxSourceFilePath = Properties.Settings.Default.LastSalaryAndTaxSourceFilePath;
+        ExpenseSourceFilePath = Properties.Settings.Default.LastExpenseSourceFilePath;
+        RootFolder = Properties.Settings.Default.LastRootFolderPath;
     }
 
     partial void OnServiceSourceFilePathChanged(string value)

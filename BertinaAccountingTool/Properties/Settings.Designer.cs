@@ -26,24 +26,72 @@ namespace BertinaAccountingTool.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string LastSourceFilePath {
+        public string LastOwnerSourceFilePath {
             get {
-                return ((string)(this["LastSourceFilePath"]));
+                return ((string)(this["LastOwnerSourceFilePath"]));
             }
             set {
-                this["LastSourceFilePath"] = value;
+                this["LastOwnerSourceFilePath"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string LastRootFolder {
+        public string LastServiceSourceFilePath {
             get {
-                return ((string)(this["LastRootFolder"]));
+                return ((string)(this["LastServiceSourceFilePath"]));
             }
             set {
-                this["LastRootFolder"] = value;
+                this["LastServiceSourceFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastBookingSourceFilePath {
+            get {
+                return ((string)(this["LastBookingSourceFilePath"]));
+            }
+            set {
+                this["LastBookingSourceFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastSalaryAndTaxSourceFilePath {
+            get {
+                return ((string)(this["LastSalaryAndTaxSourceFilePath"]));
+            }
+            set {
+                this["LastSalaryAndTaxSourceFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastExpenseSourceFilePath {
+            get {
+                return ((string)(this["LastExpenseSourceFilePath"]));
+            }
+            set {
+                this["LastExpenseSourceFilePath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastRootFolderPath {
+            get {
+                return ((string)(this["LastRootFolderPath"]));
+            }
+            set {
+                this["LastRootFolderPath"] = value;
             }
         }
     }
