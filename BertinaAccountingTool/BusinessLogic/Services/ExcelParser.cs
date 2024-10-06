@@ -24,7 +24,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
                     name: worksheet.Cells[row, 4].GetValue<string>(),
                     accountNumber: CleareAccountNumber(worksheet.Cells[row, 5].GetValue<string>()),
                     value: CleareValue(worksheet.Cells[row, 3].GetValue<double>()),
-                    message: $"Bevétel és ktg. kül. {worksheet.Cells[row, 2].GetValue<string>()} {DateTime.Now.ToString("yyyy.MM")}");
+                    message: $"Bevétel és ktg. kül. {worksheet.Cells[row, 2].GetValue<string>()} {DateTime.Now.AddMonths(-1).ToString("yyyy.MM")}");
 
                 if (!res.ContainsKey(compName))
                     res[compName] = new List<Invoice>();
