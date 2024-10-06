@@ -10,7 +10,7 @@ namespace BertinaAccountingTool.BusinessLogic.ViewModel;
 
 public partial class CSVInvoiceViewModel : ObservableObject
 {
-    private Dictionary<string, Dictionary<string, List<Invoice>>> parsedData = new();
+    private Dictionary<string, Company> parsedData = new();
 
     [ObservableProperty]
     private string ownerSourceFilePath = string.Empty;
@@ -83,36 +83,29 @@ public partial class CSVInvoiceViewModel : ObservableObject
     partial void OnServiceSourceFilePathChanged(string value)
     {
         parsedData.Clear();
-        List<FileInfo> fileInfos = new();
-        var files = value.Split('#');
+        FileInfo fileInfo;
         try
         {
-            foreach (var file in files)
-            {
-                if (!(file.EndsWith(".xls") || file.EndsWith(".xlsx")) || !File.Exists(file))
-                    throw new Exception();
-                fileInfos.Add(new FileInfo(file));
-            }
+            if (!(value.EndsWith(".xls") || value.EndsWith(".xlsx")) || !File.Exists(value))
+                throw new Exception();
+            fileInfo = new FileInfo(value);
         }
         catch
         {
             return;
         }
 
-        foreach (var file in fileInfos)
+        var from = fileInfo.Name.IndexOf('_') + 1;
+        var to = fileInfo.Name.LastIndexOf(".");
+        var invoiceType = fileInfo.Name[from..to];
+        var invoicesForCompanies = ExcelParser.ParseServiceExcel(fileInfo);
+
+        foreach (var invoices in invoicesForCompanies)
         {
-            var from = file.Name.IndexOf('_') + 1;
-            var to = file.Name.LastIndexOf(".");
-            var invoiceType = file.Name[from..to];
-            var invoicesForCompanies = ExcelParser.ParseExcel(file);
+            if (!parsedData.ContainsKey(invoices.Key))
+                parsedData[invoices.Key] = new();
 
-            foreach (var invoices in invoicesForCompanies)
-            {
-                if (!parsedData.ContainsKey(invoices.Key))
-                    parsedData[invoices.Key] = new Dictionary<string, List<Invoice>>();
-
-                parsedData[invoices.Key][invoiceType] = invoices.Value;
-            }
+            parsedData[invoices.Key].ServiceInvoices = invoices.Value;
         }
     }
 }

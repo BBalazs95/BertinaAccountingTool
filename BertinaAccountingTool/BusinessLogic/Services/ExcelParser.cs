@@ -11,7 +11,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
 {
     public static class ExcelParser
     {
-        public static Dictionary<string,List<Invoice>> ParseExcel(FileInfo file)
+        public static Dictionary<string,List<Invoice>> ParseServiceExcel(FileInfo file)
         {
             var res=new Dictionary<string,List<Invoice>>();
             using ExcelPackage package = new ExcelPackage(file);
