@@ -27,6 +27,41 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     [ObservableProperty]
     private string rootFolder = string.Empty;
 
+    partial void OnExpenseSourceFilePathChanged(string value)
+    {
+        FileInfo fileInfo;
+        try
+        {
+            if (!(value.EndsWith(".xls") || value.EndsWith(".xlsx")) || !File.Exists(value))
+                throw new Exception();
+            fileInfo = new FileInfo(value);
+        }
+        catch
+        {
+            return;
+        }
+
+        var invoicesForCompanies = ExcelParser.ParseExpenseExcel(fileInfo);
+
+        if (invoicesForCompanies.Keys.Count != Data.Count)
+        {
+            //TODO
+        }
+
+        foreach (var invoice in invoicesForCompanies)
+        {
+            var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
+            if (company == null)
+            {
+                company = new CompanyViewModel(invoice.Key);
+                Data.Add(company);
+            }
+
+            company.ExpenseInvoices.Clear();
+            invoice.Value.ForEach(c => company.ExpenseInvoices.Add((InvoiceViewModel)c));
+        }
+    }
+
     partial void OnOwnerSourceFilePathChanged(string value)
     {
         FileInfo fileInfo;
@@ -113,6 +148,10 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
         ExcelParser.SetCompanyAccountNumbers(fileInfo);
         OnServiceSourceFilePathChanged(ServiceSourceFilePath);
+        OnOwnerSourceFilePathChanged(ServiceSourceFilePath);
+        OnBookingSourceFilePathChanged(ServiceSourceFilePath);
+        OnSalaryAndTaxSourceFilePathChanged(ServiceSourceFilePath);
+        OnExpenseSourceFilePathChanged(ServiceSourceFilePath);
     }
 
     [RelayCommand]
