@@ -339,31 +339,17 @@ internal partial class CSVInvoiceViewModel : ObservableObject
             var baseFolder = $"{RootFolder}\\{company.Name}\\8_UTALÁS\\{DateTime.Now.Year}\\{DateTime.Now.Month - 1}".Replace(".", "");
 
             Directory.CreateDirectory(baseFolder);
-            try
-            {
+
+            if (company.OwnerInvoices.Count > 0)
                 CsvHelper.SaveInvoicesToCsv(company.OwnerInvoices, $"{baseFolder}\\Tulaj_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
-            }
-            catch { }
-            try
-            {
+            if (company.ServiceInvoices.Count > 0)
                 CsvHelper.SaveInvoicesToCsv(company.ServiceInvoices, $"{baseFolder}\\Szolgáltatói_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
-            }
-            catch { }
-            try
-            {
+            if (company.BookingInvoices.Count > 0)
                 CsvHelper.SaveInvoicesToCsv(company.BookingInvoices, $"{baseFolder}\\Booking_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
-            }
-            catch { }
-            try
-            {
+            if (company.SalaryAndTaxInvoices.Count > 0)
                 CsvHelper.SaveInvoicesToCsv(company.SalaryAndTaxInvoices, $"{baseFolder}\\Bérek+Adók_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
-            }
-            catch { }
-            try
-            {
+            if (company.ExpenseInvoices.Count > 0)
                 CsvHelper.SaveInvoicesToCsv(company.ExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
-            }
-            catch { }
         }
     }
 
