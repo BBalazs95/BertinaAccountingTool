@@ -1,10 +1,6 @@
 ﻿using BertinaAccountingTool.BusinessLogic.ViewModel;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BertinaAccountingTool.BusinessLogic.Services;
 
@@ -20,6 +16,6 @@ internal static class CsvHelper
             csvLines.Add(csvLine);
         }
 
-        File.WriteAllLines(filePath, csvLines, Encoding.UTF8);
+        File.WriteAllLines(filePath, csvLines, new UTF8Encoding(false));
     }
 }
