@@ -6,15 +6,17 @@ using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace BertinaAccountingTool.BusinessLogic.ViewModel;
 
 internal partial class CSVInvoiceViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private ObservableCollection<CompanyViewModel> data = new();
-    [ObservableProperty]
+    private ObservableCollection<CompanyViewModel> allData = new();
     private ObservableCollection<CompanyViewModel> errorData = new();
+
+    [ObservableProperty]
+    private ObservableCollection<CompanyViewModel> showedData = new();
     [ObservableProperty]
     private string companyAccountNumbersSourceFilePath = string.Empty;
     [ObservableProperty]
@@ -30,14 +32,14 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     [ObservableProperty]
     private string rootFolder = string.Empty;
 
-    partial void OnBookingSourceFilePathChanged(string value)
+    private void LoadBookingSourceFilePath()
     {
         FileInfo fileInfo;
         try
         {
-            if (!(value.EndsWith(".xls") || value.EndsWith(".xlsx")) || !File.Exists(value))
+            if (!(BookingSourceFilePath.EndsWith(".xls") || BookingSourceFilePath.EndsWith(".xlsx")) || !File.Exists(BookingSourceFilePath))
                 throw new Exception();
-            fileInfo = new FileInfo(value);
+            fileInfo = new FileInfo(BookingSourceFilePath);
         }
         catch
         {
@@ -46,24 +48,19 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
         var invoicesForCompanies = ExcelParser.ParseBookingExcel(fileInfo);
 
-        if (invoicesForCompanies.Keys.Count != Data.Count)
-        {
-            //TODO
-        }
-
         foreach (var invoice in invoicesForCompanies)
         {
-            var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
-            var errorCompany = ErrorData.FirstOrDefault(c => c.Name == invoice.Key);
+            var company = allData.FirstOrDefault(c => c.Name == invoice.Key);
+            var errorCompany = errorData.FirstOrDefault(c => c.Name == invoice.Key);
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
-                Data.Add(company);
+                allData.Add(company);
             }
             if (errorCompany == null)
             {
                 errorCompany = new CompanyViewModel(invoice.Key);
-                ErrorData.Add(errorCompany);
+                errorData.Add(errorCompany);
             }
 
             company.BookingInvoices.Clear();
@@ -78,14 +75,14 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         }
     }
 
-    partial void OnSalaryAndTaxSourceFilePathChanged(string value)
+    private void LoadSalaryAndTaxSourceFilePath()
     {
         FileInfo fileInfo;
         try
         {
-            if (!(value.EndsWith(".xls") || value.EndsWith(".xlsx")) || !File.Exists(value))
+            if (!(SalaryAndTaxSourceFilePath.EndsWith(".xls") || SalaryAndTaxSourceFilePath.EndsWith(".xlsx")) || !File.Exists(SalaryAndTaxSourceFilePath))
                 throw new Exception();
-            fileInfo = new FileInfo(value);
+            fileInfo = new FileInfo(SalaryAndTaxSourceFilePath);
         }
         catch
         {
@@ -94,24 +91,19 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
         var invoicesForCompanies = ExcelParser.ParseSalaryAndTaxExcel(fileInfo);
 
-        if (invoicesForCompanies.Keys.Count != Data.Count)
-        {
-            //TODO
-        }
-
         foreach (var invoice in invoicesForCompanies)
         {
-            var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
-            var errorCompany = ErrorData.FirstOrDefault(c => c.Name == invoice.Key);
+            var company = allData.FirstOrDefault(c => c.Name == invoice.Key);
+            var errorCompany = errorData.FirstOrDefault(c => c.Name == invoice.Key);
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
-                Data.Add(company);
+                allData.Add(company);
             }
             if (errorCompany == null)
             {
                 errorCompany = new CompanyViewModel(invoice.Key);
-                ErrorData.Add(errorCompany);
+                errorData.Add(errorCompany);
             }
 
             company.SalaryAndTaxInvoices.Clear();
@@ -126,14 +118,14 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         }
     }
 
-    partial void OnExpenseSourceFilePathChanged(string value)
+    private void LoadExpenseSourceFilePath()
     {
         FileInfo fileInfo;
         try
         {
-            if (!(value.EndsWith(".xls") || value.EndsWith(".xlsx")) || !File.Exists(value))
+            if (!(ExpenseSourceFilePath.EndsWith(".xls") || ExpenseSourceFilePath.EndsWith(".xlsx")) || !File.Exists(ExpenseSourceFilePath))
                 throw new Exception();
-            fileInfo = new FileInfo(value);
+            fileInfo = new FileInfo(ExpenseSourceFilePath);
         }
         catch
         {
@@ -142,24 +134,19 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
         var invoicesForCompanies = ExcelParser.ParseExpenseExcel(fileInfo);
 
-        if (invoicesForCompanies.Keys.Count != Data.Count)
-        {
-            //TODO
-        }
-
         foreach (var invoice in invoicesForCompanies)
         {
-            var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
-            var errorCompany = ErrorData.FirstOrDefault(c => c.Name == invoice.Key);
+            var company = allData.FirstOrDefault(c => c.Name == invoice.Key);
+            var errorCompany = errorData.FirstOrDefault(c => c.Name == invoice.Key);
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
-                Data.Add(company);
+                allData.Add(company);
             }
             if (errorCompany == null)
             {
                 errorCompany = new CompanyViewModel(invoice.Key);
-                ErrorData.Add(errorCompany);
+                errorData.Add(errorCompany);
             }
 
             company.ExpenseInvoices.Clear();
@@ -174,14 +161,14 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         }
     }
 
-    partial void OnOwnerSourceFilePathChanged(string value)
+    private void LoadOwnerSourceFilePath()
     {
         FileInfo fileInfo;
         try
         {
-            if (!(value.EndsWith(".xls") || value.EndsWith(".xlsx")) || !File.Exists(value))
+            if (!(OwnerSourceFilePath.EndsWith(".xls") || OwnerSourceFilePath.EndsWith(".xlsx")) || !File.Exists(OwnerSourceFilePath))
                 throw new Exception();
-            fileInfo = new FileInfo(value);
+            fileInfo = new FileInfo(OwnerSourceFilePath);
         }
         catch
         {
@@ -190,24 +177,19 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
         var invoicesForCompanies = ExcelParser.ParseOwnerExcel(fileInfo);
 
-        if (invoicesForCompanies.Keys.Count != Data.Count)
-        {
-            //TODO
-        }
-
         foreach (var invoice in invoicesForCompanies)
         {
-            var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
-            var errorCompany = ErrorData.FirstOrDefault(c => c.Name == invoice.Key);
+            var company = allData.FirstOrDefault(c => c.Name == invoice.Key);
+            var errorCompany = errorData.FirstOrDefault(c => c.Name == invoice.Key);
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
-                Data.Add(company);
+                allData.Add(company);
             }
             if (errorCompany == null)
             {
                 errorCompany = new CompanyViewModel(invoice.Key);
-                ErrorData.Add(errorCompany);
+                errorData.Add(errorCompany);
             }
 
             company.OwnerInvoices.Clear();
@@ -222,14 +204,14 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         }
     }
 
-    partial void OnServiceSourceFilePathChanged(string value)
+    private void LoadServiceSourceFilePath()
     {
         FileInfo fileInfo;
         try
         {
-            if (!(value.EndsWith(".xls") || value.EndsWith(".xlsx")) || !File.Exists(value))
+            if (!(ServiceSourceFilePath.EndsWith(".xls") || ServiceSourceFilePath.EndsWith(".xlsx")) || !File.Exists(ServiceSourceFilePath))
                 throw new Exception();
-            fileInfo = new FileInfo(value);
+            fileInfo = new FileInfo(ServiceSourceFilePath);
         }
         catch
         {
@@ -238,24 +220,19 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
         var invoicesForCompanies = ExcelParser.ParseServiceExcel(fileInfo);
 
-        if (invoicesForCompanies.Keys.Count != Data.Count)
-        {
-            //TODO
-        }
-
         foreach (var invoice in invoicesForCompanies)
         {
-            var company = Data.FirstOrDefault(c => c.Name == invoice.Key);
-            var errorCompany = ErrorData.FirstOrDefault(c => c.Name == invoice.Key);
+            var company = allData.FirstOrDefault(c => c.Name == invoice.Key);
+            var errorCompany = errorData.FirstOrDefault(c => c.Name == invoice.Key);
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
-                Data.Add(company);
+                allData.Add(company);
             }
             if (errorCompany == null)
             {
                 errorCompany = new CompanyViewModel(invoice.Key);
-                ErrorData.Add(errorCompany);
+                errorData.Add(errorCompany);
             }
 
             company.ServiceInvoices.Clear();
@@ -285,6 +262,7 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         }
 
         ExcelParser.SetCompanyAccountNumbers(fileInfo);
+
         OnServiceSourceFilePathChanged(ServiceSourceFilePath);
         OnOwnerSourceFilePathChanged(ServiceSourceFilePath);
         OnBookingSourceFilePathChanged(ServiceSourceFilePath);
@@ -293,15 +271,30 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void ShowAllInvoice(ListBox listBox)
+    public void LoadData()
     {
-        listBox.ItemsSource = Data;
+        allData.Clear();
+        errorData.Clear();
+
+        LoadOwnerSourceFilePath();
+        LoadServiceSourceFilePath();
+        LoadBookingSourceFilePath();
+        LoadSalaryAndTaxSourceFilePath();
+        LoadExpenseSourceFilePath();
+
+        ShowedData = allData;
     }
 
     [RelayCommand]
-    public void ShowErrorInvoice(ListBox listBox)
+    public void ShowAllInvoice()
     {
-        listBox.ItemsSource = ErrorData;
+        ShowedData = allData;
+    }
+
+    [RelayCommand]
+    public void ShowErrorInvoice()
+    {
+        ShowedData = errorData;
     }
 
     [RelayCommand]
@@ -334,7 +327,7 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     [RelayCommand]
     public void CreateCSV()
     {
-        foreach (var company in Data)
+        foreach (var company in allData)
         {
             var baseFolder = $"{RootFolder}\\{company.Name}".Replace(".", "");
 

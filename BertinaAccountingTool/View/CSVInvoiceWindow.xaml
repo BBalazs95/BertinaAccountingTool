@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BertinaAccountingTool.View"
         xmlns:vm="clr-namespace:BertinaAccountingTool.BusinessLogic.ViewModel"
+        xmlns:scm="clr-namespace:System.ComponentModel;assembly=WindowsBase"
         d:DataContext="{d:DesignInstance Type=vm:CSVInvoiceViewModel, IsDesignTimeCreatable=True}"
         mc:Ignorable="d" Closing="Window_Closing"
         Title="CSVInvoiceWindow" Height="800" Width="1200">
@@ -18,6 +19,12 @@
             <Setter Property="Margin" Value="10"/>
             <Setter Property="AlternatingRowBackground" Value="LightGray"/>
         </Style>
+
+        <CollectionViewSource x:Key="sortedCollection" Source="{Binding ShowedData}">
+            <CollectionViewSource.SortDescriptions>
+                <scm:SortDescription PropertyName="Name" Direction="Ascending"/>
+            </CollectionViewSource.SortDescriptions>
+        </CollectionViewSource>
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
@@ -27,6 +34,7 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -73,13 +81,15 @@
         <TextBox x:Name="tbExpense" Text="{Binding ExpenseSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="13" Margin="3"/>
         <Button Content="Browse" Grid.Column="1" Grid.Row="13" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbExpense}"/>
 
-        <Button Content="CSV Fájlok létrehozása" Grid.Row="14" Grid.ColumnSpan="2" Margin="3" Command="{Binding CreateCSVCommand}"/>
+        <Button Content="Betöltés" Grid.Row="14" Grid.ColumnSpan="2" Margin="3" Command="{Binding LoadDataCommand}"/>
+        
+        <Button Content="CSV Fájlok létrehozása" Grid.Row="15" Grid.ColumnSpan="2" Margin="3" Command="{Binding CreateCSVCommand}"/>
 
-        <Button Grid.Column="2" Margin="3" Content="Összes utalások" Command="{Binding ShowAllInvoiceCommand}" CommandParameter="{Binding ElementName=blInvoices}"/>
-        <Button Grid.Column="3" Margin="3" Content="Hibás utalások" Command="{Binding ShowErrorInvoiceCommand}" CommandParameter="{Binding ElementName=blInvoices}"/>
+        <Button Grid.Column="2" Margin="3" Content="Összes utalások" Command="{Binding ShowAllInvoiceCommand}"/>
+        <Button Grid.Column="3" Margin="3" Content="Hibás utalások" Command="{Binding ShowErrorInvoiceCommand}"/>
 
-        <ScrollViewer Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="99" Margin="0,3,0,3" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-            <ListBox x:Name="blInvoices" ItemsSource="{Binding Data}">
+        <ScrollViewer Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="99" Margin="3" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+            <ListBox x:Name="blInvoices" ItemsSource="{Binding Source={StaticResource sortedCollection}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Expander IsExpanded="False" Header="{Binding Name}" Width="750" Visibility="{Binding CompanyVisibility}">
