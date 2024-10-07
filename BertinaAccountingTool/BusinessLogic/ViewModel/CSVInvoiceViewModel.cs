@@ -336,15 +336,34 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     {
         foreach (var company in Data)
         {
-            var baseFolder = $"{RootFolder}\\{company.Name}\\8_UTALÁS\\{DateTime.Now.Year}\\{DateTime.Now.Month}".Replace(".", "");
+            var baseFolder = $"{RootFolder}\\{company.Name}\\8_UTALÁS\\{DateTime.Now.Year}\\{DateTime.Now.Month - 1}".Replace(".", "");
 
             Directory.CreateDirectory(baseFolder);
-
-            CsvHelper.SaveInvoicesToCsv(company.OwnerInvoices, $"{baseFolder}\\Tulaj_Utalások_{company.Name.Replace(" ", "_")}.csv");
-            CsvHelper.SaveInvoicesToCsv(company.ServiceInvoices, $"{baseFolder}\\Szolgáltatói_Utalások_{company.Name.Replace(" ", "_")}.csv");
-            CsvHelper.SaveInvoicesToCsv(company.BookingInvoices, $"{baseFolder}\\Booking_Utalások_{company.Name.Replace(" ", "_")}.csv");
-            CsvHelper.SaveInvoicesToCsv(company.SalaryAndTaxInvoices, $"{baseFolder}\\Bérek+Adók_Utalások_{company.Name.Replace(" ", "_")}.csv");
-            CsvHelper.SaveInvoicesToCsv(company.ExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{company.Name.Replace(" ", "_")}.csv");
+            try
+            {
+                CsvHelper.SaveInvoicesToCsv(company.OwnerInvoices, $"{baseFolder}\\Tulaj_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+            }
+            catch { }
+            try
+            {
+                CsvHelper.SaveInvoicesToCsv(company.ServiceInvoices, $"{baseFolder}\\Szolgáltatói_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+            }
+            catch { }
+            try
+            {
+                CsvHelper.SaveInvoicesToCsv(company.BookingInvoices, $"{baseFolder}\\Booking_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+            }
+            catch { }
+            try
+            {
+                CsvHelper.SaveInvoicesToCsv(company.SalaryAndTaxInvoices, $"{baseFolder}\\Bérek+Adók_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+            }
+            catch { }
+            try
+            {
+                CsvHelper.SaveInvoicesToCsv(company.ExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+            }
+            catch { }
         }
     }
 
