@@ -19,6 +19,12 @@
             <Setter Property="Margin" Value="10"/>
             <Setter Property="AlternatingRowBackground" Value="LightGray"/>
         </Style>
+        
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
 
         <CollectionViewSource x:Key="sortedCollection" Source="{Binding ShowedData}">
             <CollectionViewSource.SortDescriptions>
@@ -89,7 +95,8 @@
         <Button Grid.Column="3" Margin="3" Content="Hibás utalások" Command="{Binding ShowErrorInvoiceCommand}"/>
 
         <ScrollViewer Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="99" Margin="3" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
-            <ListBox x:Name="blInvoices" ItemsSource="{Binding Source={StaticResource sortedCollection}}">
+            <ListBox x:Name="blInvoices" ItemsSource="{Binding Source={StaticResource sortedCollection}}"
+                 ItemContainerStyle="{StaticResource {x:Type ListBoxItem}}">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Expander IsExpanded="False" Header="{Binding Name}" Width="750" Visibility="{Binding CompanyVisibility}">
