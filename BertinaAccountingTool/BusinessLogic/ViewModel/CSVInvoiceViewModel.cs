@@ -336,7 +336,7 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     {
         foreach (var company in Data)
         {
-            var baseFolder = $"{RootFolder}\\{company.Name}\\8_UTALÁS\\{DateTime.Now.Year}\\{DateTime.Now.Month - 1}".Replace(".", "");
+            var baseFolder = $"{RootFolder}\\{company.Name}".Replace(".", "");
 
             Directory.CreateDirectory(baseFolder);
 
