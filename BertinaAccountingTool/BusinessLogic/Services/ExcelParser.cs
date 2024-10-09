@@ -13,7 +13,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
         {
             var res = new Dictionary<string, List<Invoice>>();
             using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
             int rows = worksheet.Dimension.Rows;
             for (int row = 2; row <= rows; row++)
@@ -39,7 +39,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
         {
             var res = new Dictionary<string, List<Invoice>>();
             using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
             int rows = worksheet.Dimension.Rows;
             for (int row = 2; row <= rows; row++)
@@ -117,7 +117,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
         {
             var res = new Dictionary<string, List<Invoice>>();
             using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[1];
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
             int rows = worksheet.Dimension.Rows;
             for (int row = 2; row <= rows; row++)
@@ -160,7 +160,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             if (companyName == null)
                 return Constants.errorValue;
 
-            if (companyAccountNumbers.TryGetValue(companyName, out string res))
+            if (companyAccountNumbers.TryGetValue(companyName, out string? res))
                 return res;
 
             return Constants.errorValue;
