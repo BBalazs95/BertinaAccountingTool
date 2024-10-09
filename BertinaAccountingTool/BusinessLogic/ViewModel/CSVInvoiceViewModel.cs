@@ -335,37 +335,37 @@ internal partial class CSVInvoiceViewModel : ObservableObject
             var rightOwnerInvoices = company.OwnerInvoices.Where(i => !HasError(i));
             var errorOwnerInvoices = company.OwnerInvoices.Where(HasError);
             if (rightOwnerInvoices.Count() > 0)
-                CsvHelper.SaveInvoicesToCsv(rightOwnerInvoices, $"{baseFolder}\\Tulaj_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+                ExportHelper.SaveInvoicesToCsv(rightOwnerInvoices, $"{baseFolder}\\Tulaj_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
             if (errorOwnerInvoices.Count() > 0)
-                CsvHelper.SaveInvoicesToCsv(errorOwnerInvoices, $"{baseFolder}\\Tulaj_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.csv");
+                ExportHelper.SaveInvoicesToExcel(errorOwnerInvoices, $"{baseFolder}\\Tulaj_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.xlsx");
 
             var rightServiceInvoices = company.ServiceInvoices.Where(i => !HasError(i));
             var errorServiceInvoices = company.ServiceInvoices.Where(HasError);
             if (rightServiceInvoices.Count() > 0)
-                CsvHelper.SaveInvoicesToCsv(rightServiceInvoices, $"{baseFolder}\\Szolgáltatói_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+                ExportHelper.SaveInvoicesToCsv(rightServiceInvoices, $"{baseFolder}\\Szolgáltatói_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
             if (errorServiceInvoices.Count() > 0)
-                CsvHelper.SaveInvoicesToCsv(errorServiceInvoices, $"{baseFolder}\\Szolgáltatói_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.csv");
+                ExportHelper.SaveInvoicesToExcel(errorServiceInvoices, $"{baseFolder}\\Szolgáltatói_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.xlsx");
 
             var rightBookingInvoices = company.BookingInvoices.Where(i => !HasError(i));
             var errorBookingInvoices = company.BookingInvoices.Where(HasError);
             if (rightBookingInvoices.Count() > 0)
-                CsvHelper.SaveInvoicesToCsv(rightBookingInvoices, $"{baseFolder}\\Booking_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+                ExportHelper.SaveInvoicesToCsv(rightBookingInvoices, $"{baseFolder}\\Booking_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
             if (errorBookingInvoices.Count() > 0)
-                CsvHelper.SaveInvoicesToCsv(errorBookingInvoices, $"{baseFolder}\\Booking_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.csv");
+                ExportHelper.SaveInvoicesToExcel(errorBookingInvoices, $"{baseFolder}\\Booking_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.xlsx");
 
             var rightSalaryAndTaxInvoices = company.SalaryAndTaxInvoices.Where(i => !HasError(i));
             var errorSalaryAndTaxInvoices = company.SalaryAndTaxInvoices.Where(HasError);
             if (rightSalaryAndTaxInvoices.Count() > 0)
-                CsvHelper.SaveInvoicesToCsv(rightSalaryAndTaxInvoices, $"{baseFolder}\\Bérek+Adók_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+                ExportHelper.SaveInvoicesToCsv(rightSalaryAndTaxInvoices, $"{baseFolder}\\Bérek+Adók_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
             if (errorSalaryAndTaxInvoices.Count() > 0)
-                CsvHelper.SaveInvoicesToCsv(errorSalaryAndTaxInvoices, $"{baseFolder}\\Bérek+Adók_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.csv");
+                ExportHelper.SaveInvoicesToExcel(errorSalaryAndTaxInvoices, $"{baseFolder}\\Bérek+Adók_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.xlsx");
 
             var rightExpenseInvoices = company.ExpenseInvoices.Where(i => !HasError(i));
             var errorExpenseInvoices = company.ExpenseInvoices.Where(HasError);
             if (rightExpenseInvoices.Count() > 0)
-                CsvHelper.SaveInvoicesToCsv(rightExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+                ExportHelper.SaveInvoicesToCsv(rightExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
             if (errorExpenseInvoices.Count() > 0)
-                CsvHelper.SaveInvoicesToCsv(errorExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.csv");
+                ExportHelper.SaveInvoicesToExcel(errorExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.xlsx");
         }
     }
 
