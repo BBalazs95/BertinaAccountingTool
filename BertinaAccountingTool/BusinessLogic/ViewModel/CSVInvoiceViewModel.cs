@@ -332,40 +332,57 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
             Directory.CreateDirectory(baseFolder);
 
-            var rightOwnerInvoices = company.OwnerInvoices.Where(i => !HasError(i));
+            string clearCompanyName = company.Name.Replace(" ", "_").Replace(".", "");
+
+            var rightOwnerInvoices = company.OwnerInvoices.Where(i => !HasError(i) && i.Value != "0");
+            var zeroOwnerInvoices = company.OwnerInvoices.Where(i => !HasError(i) && i.Value == "0");
             var errorOwnerInvoices = company.OwnerInvoices.Where(HasError);
             if (rightOwnerInvoices.Count() > 0)
-                ExportHelper.SaveInvoicesToCsv(rightOwnerInvoices, $"{baseFolder}\\Tulaj_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+                ExportHelper.SaveInvoicesToCsv(rightOwnerInvoices, $"{baseFolder}\\Tulaj_Utalások_{clearCompanyName}.csv");
             if (errorOwnerInvoices.Count() > 0)
-                ExportHelper.SaveInvoicesToExcel(errorOwnerInvoices, $"{baseFolder}\\Tulaj_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.xlsx");
+                ExportHelper.SaveInvoicesToExcel(errorOwnerInvoices, $"{baseFolder}\\Tulaj_Utalások_{clearCompanyName}_hiba.xlsx");
+            if (zeroOwnerInvoices.Count() > 0)
+                ExportHelper.SaveInvoicesToExcel(zeroOwnerInvoices, $"{baseFolder}\\Tulaj_Utalások_{clearCompanyName}_0.xlsx");
 
-            var rightServiceInvoices = company.ServiceInvoices.Where(i => !HasError(i));
+            var rightServiceInvoices = company.ServiceInvoices.Where(i => !HasError(i) && i.Value != "0");
+            var zeroServiceInvoices = company.ServiceInvoices.Where(i => !HasError(i) && i.Value == "0");
             var errorServiceInvoices = company.ServiceInvoices.Where(HasError);
             if (rightServiceInvoices.Count() > 0)
-                ExportHelper.SaveInvoicesToCsv(rightServiceInvoices, $"{baseFolder}\\Szolgáltatói_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+                ExportHelper.SaveInvoicesToCsv(rightServiceInvoices, $"{baseFolder}\\Szolgáltatói_Utalások_{clearCompanyName}.csv");
             if (errorServiceInvoices.Count() > 0)
-                ExportHelper.SaveInvoicesToExcel(errorServiceInvoices, $"{baseFolder}\\Szolgáltatói_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.xlsx");
+                ExportHelper.SaveInvoicesToExcel(errorServiceInvoices, $"{baseFolder}\\Szolgáltatói_Utalások_{clearCompanyName}_hiba.xlsx");
+            if (zeroServiceInvoices.Count() > 0)
+                ExportHelper.SaveInvoicesToExcel(zeroServiceInvoices, $"{baseFolder}\\Szolgáltatói_Utalások_{clearCompanyName}_0.xlsx");
 
-            var rightBookingInvoices = company.BookingInvoices.Where(i => !HasError(i));
+            var rightBookingInvoices = company.BookingInvoices.Where(i => !HasError(i) && i.Value != "0");
+            var zeroBookingInvoices = company.BookingInvoices.Where(i => !HasError(i) && i.Value == "0");
             var errorBookingInvoices = company.BookingInvoices.Where(HasError);
             if (rightBookingInvoices.Count() > 0)
-                ExportHelper.SaveInvoicesToCsv(rightBookingInvoices, $"{baseFolder}\\Booking_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+                ExportHelper.SaveInvoicesToCsv(rightBookingInvoices, $"{baseFolder}\\Booking_Utalások_{clearCompanyName}.csv");
             if (errorBookingInvoices.Count() > 0)
-                ExportHelper.SaveInvoicesToExcel(errorBookingInvoices, $"{baseFolder}\\Booking_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.xlsx");
+                ExportHelper.SaveInvoicesToExcel(errorBookingInvoices, $"{baseFolder}\\Booking_Utalások_{clearCompanyName}_hiba.xlsx");
+            if (zeroBookingInvoices.Count() > 0)
+                ExportHelper.SaveInvoicesToExcel(zeroBookingInvoices, $"{baseFolder}\\Booking_Utalások_{clearCompanyName}_0.xlsx");
 
-            var rightSalaryAndTaxInvoices = company.SalaryAndTaxInvoices.Where(i => !HasError(i));
+            var rightSalaryAndTaxInvoices = company.SalaryAndTaxInvoices.Where(i => !HasError(i) && i.Value != "0");
+            var zeroSalaryAndTaxInvoices = company.SalaryAndTaxInvoices.Where(i => !HasError(i) && i.Value == "0");
             var errorSalaryAndTaxInvoices = company.SalaryAndTaxInvoices.Where(HasError);
             if (rightSalaryAndTaxInvoices.Count() > 0)
-                ExportHelper.SaveInvoicesToCsv(rightSalaryAndTaxInvoices, $"{baseFolder}\\Bérek+Adók_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+                ExportHelper.SaveInvoicesToCsv(rightSalaryAndTaxInvoices, $"{baseFolder}\\Bérek+Adók_Utalások_{clearCompanyName}.csv");
             if (errorSalaryAndTaxInvoices.Count() > 0)
-                ExportHelper.SaveInvoicesToExcel(errorSalaryAndTaxInvoices, $"{baseFolder}\\Bérek+Adók_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.xlsx");
+                ExportHelper.SaveInvoicesToExcel(errorSalaryAndTaxInvoices, $"{baseFolder}\\Bérek+Adók_Utalások_{clearCompanyName}_hiba.xlsx");
+            if (zeroSalaryAndTaxInvoices.Count() > 0)
+                ExportHelper.SaveInvoicesToExcel(zeroSalaryAndTaxInvoices, $"{baseFolder}\\Bérek+Adók_Utalások_{clearCompanyName}_0.xlsx");
 
-            var rightExpenseInvoices = company.ExpenseInvoices.Where(i => !HasError(i));
+            var rightExpenseInvoices = company.ExpenseInvoices.Where(i => !HasError(i) && i.Value != "0");
+            var zeroExpenseInvoices = company.ExpenseInvoices.Where(i => !HasError(i) && i.Value == "0");
             var errorExpenseInvoices = company.ExpenseInvoices.Where(HasError);
             if (rightExpenseInvoices.Count() > 0)
-                ExportHelper.SaveInvoicesToCsv(rightExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+                ExportHelper.SaveInvoicesToCsv(rightExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{clearCompanyName}.csv");
             if (errorExpenseInvoices.Count() > 0)
-                ExportHelper.SaveInvoicesToExcel(errorExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}_hiba.xlsx");
+                ExportHelper.SaveInvoicesToExcel(errorExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{clearCompanyName}_hiba.xlsx");
+            if (zeroExpenseInvoices.Count() > 0)
+                ExportHelper.SaveInvoicesToExcel(zeroExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{clearCompanyName}_0.xlsx");
         }
     }
 
