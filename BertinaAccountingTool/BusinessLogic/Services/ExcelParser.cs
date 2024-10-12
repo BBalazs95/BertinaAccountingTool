@@ -18,7 +18,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             int rows = worksheet.Dimension.Rows;
             for (int row = 2; row <= rows; row++)
             {
-                var compName = worksheet.Cells[row, 1].GetValue<string>() ?? Constants.errorValue;
+                var compName = worksheet.Cells[row, 1].GetValue<string>().Replace(".", "") ?? Constants.errorValue;
                 var invoice = new Invoice(
                     companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 1].GetValue<string>().Replace(".", ""))),
                     name: worksheet.Cells[row, 4].GetValue<string>(),
@@ -26,7 +26,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
                     value: CleareValue(worksheet.Cells[row, 3].GetValue<double>()),
                     message: $"Bevétel és ktg. kül. {worksheet.Cells[row, 2].GetValue<string>()} {DateTime.Now.AddMonths(-1).ToString("yyyy.MM")}");
 
-                if (!res.ContainsKey(compName))
+                if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
                     res[compName] = new List<Invoice>();
 
                 res[compName].Add(invoice);
@@ -44,7 +44,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             int rows = worksheet.Dimension.Rows;
             for (int row = 2; row <= rows; row++)
             {
-                var compName = worksheet.Cells[row, 1].GetValue<string>() ?? Constants.errorValue;
+                var compName = worksheet.Cells[row, 1].GetValue<string>().Replace(".", "") ?? Constants.errorValue;
                 var invoice = new Invoice(
                     companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 1].GetValue<string>().Replace(".", ""))),
                     name: worksheet.Cells[row, 4].GetValue<string>(),
@@ -52,7 +52,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
                     value: CleareValue(worksheet.Cells[row, 2].GetValue<double>()),
                     message: worksheet.Cells[row, 3].GetValue<string>());
 
-                if (!res.ContainsKey(compName))
+                if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
                     res[compName] = new List<Invoice>();
 
                 res[compName].Add(invoice);
@@ -70,7 +70,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             int rows = worksheet.Dimension.Rows;
             for (int row = 2; row <= rows; row++)
             {
-                var compName = worksheet.Cells[row, 5].GetValue<string>() ?? Constants.errorValue;
+                var compName = worksheet.Cells[row, 5].GetValue<string>().Replace(".", "") ?? Constants.errorValue;
                 var invoice = new Invoice(
                     companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 5].GetValue<string>().Replace(".", ""))),
                     name: "Booking.com",
@@ -78,7 +78,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
                     value: CleareValue(worksheet.Cells[row, 4].GetValue<double>()),
                     message: $"{worksheet.Cells[row, 2].GetValue<string>()}, {worksheet.Cells[row, 3].GetValue<string>()}");
 
-                if (!res.ContainsKey(compName))
+                if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
                     res[compName] = new List<Invoice>();
 
                 res[compName].Add(invoice);
@@ -96,7 +96,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             int rows = worksheet.Dimension.Rows;
             for (int row = 2; row <= rows; row++)
             {
-                var compName = worksheet.Cells[row, 1].GetValue<string>() ?? Constants.errorValue;
+                var compName = worksheet.Cells[row, 1].GetValue<string>().Replace(".", "") ?? Constants.errorValue;
                 var invoice = new Invoice(
                     companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 1].GetValue<string>().Replace(".", ""))),
                     name: worksheet.Cells[row, 3].GetValue<string>(),
@@ -104,7 +104,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
                     value: CleareValue(worksheet.Cells[row, 5].GetValue<double>()),
                     message: worksheet.Cells[row, 6].GetValue<string>());
 
-                if (!res.ContainsKey(compName))
+                if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
                     res[compName] = new List<Invoice>();
 
                 res[compName].Add(invoice);
@@ -122,7 +122,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             int rows = worksheet.Dimension.Rows;
             for (int row = 2; row <= rows; row++)
             {
-                var compName = worksheet.Cells[row, 2].GetValue<string>() ?? Constants.errorValue;
+                var compName = worksheet.Cells[row, 2].GetValue<string>().Replace(".", "") ?? Constants.errorValue;
                 var invoice = new Invoice(
                     companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 2].GetValue<string>().Replace(".", ""))),
                     name: worksheet.Cells[row, 6].GetValue<string>(),
@@ -130,7 +130,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
                     value: CleareValue(worksheet.Cells[row, 4].GetValue<double>()),
                     message: worksheet.Cells[row, 1].GetValue<string>());
 
-                if (!res.ContainsKey(compName))
+                if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
                     res[compName] = new List<Invoice>();
 
                 res[compName].Add(invoice);
