@@ -49,8 +49,8 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
         foreach (var invoice in invoicesForCompanies)
         {
-            var company = allData.FirstOrDefault(c => c.Name == invoice.Key);
-            var errorCompany = errorData.FirstOrDefault(c => c.Name == invoice.Key);
+            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
@@ -92,8 +92,8 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
         foreach (var invoice in invoicesForCompanies)
         {
-            var company = allData.FirstOrDefault(c => c.Name == invoice.Key);
-            var errorCompany = errorData.FirstOrDefault(c => c.Name == invoice.Key);
+            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
@@ -135,8 +135,8 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
         foreach (var invoice in invoicesForCompanies)
         {
-            var company = allData.FirstOrDefault(c => c.Name == invoice.Key);
-            var errorCompany = errorData.FirstOrDefault(c => c.Name == invoice.Key);
+            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
@@ -178,8 +178,8 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
         foreach (var invoice in invoicesForCompanies)
         {
-            var company = allData.FirstOrDefault(c => c.Name == invoice.Key);
-            var errorCompany = errorData.FirstOrDefault(c => c.Name == invoice.Key);
+            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
@@ -221,8 +221,8 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
         foreach (var invoice in invoicesForCompanies)
         {
-            var company = allData.FirstOrDefault(c => c.Name == invoice.Key);
-            var errorCompany = errorData.FirstOrDefault(c => c.Name == invoice.Key);
+            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
             if (company == null)
             {
                 company = new CompanyViewModel(invoice.Key);
@@ -261,12 +261,6 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         }
 
         ExcelParser.SetCompanyAccountNumbers(fileInfo);
-
-        OnServiceSourceFilePathChanged(ServiceSourceFilePath);
-        OnOwnerSourceFilePathChanged(ServiceSourceFilePath);
-        OnBookingSourceFilePathChanged(ServiceSourceFilePath);
-        OnSalaryAndTaxSourceFilePathChanged(ServiceSourceFilePath);
-        OnExpenseSourceFilePathChanged(ServiceSourceFilePath);
     }
 
     [RelayCommand]
@@ -328,11 +322,11 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     {
         foreach (var company in allData)
         {
-            var baseFolder = $"{RootFolder}\\{company.Name}".Replace(".", "");
+            var baseFolder = $"{RootFolder}\\{company.Name}";
 
             Directory.CreateDirectory(baseFolder);
 
-            string clearCompanyName = company.Name.Replace(" ", "_").Replace(".", "");
+            string clearCompanyName = company.Name.Replace(" ", "_");
 
             var rightOwnerInvoices = company.OwnerInvoices.Where(i => !HasError(i) && i.Value != "0");
             var zeroOwnerInvoices = company.OwnerInvoices.Where(i => !HasError(i) && i.Value == "0");
