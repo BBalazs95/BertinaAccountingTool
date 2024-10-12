@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace BertinaAccountingTool.BusinessLogic.ViewModel;
@@ -33,234 +34,228 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
     private void LoadBookingSourceFilePath()
     {
-        FileInfo fileInfo;
         try
         {
             if (!(BookingSourceFilePath.EndsWith(".xls") || BookingSourceFilePath.EndsWith(".xlsx")) || !File.Exists(BookingSourceFilePath))
                 throw new Exception();
-            fileInfo = new FileInfo(BookingSourceFilePath);
-        }
-        catch
-        {
-            return;
-        }
+            var fileInfo = new FileInfo(BookingSourceFilePath);
 
-        var invoicesForCompanies = ExcelParser.ParseBookingExcel(fileInfo);
+            var invoicesForCompanies = ExcelParser.ParseBookingExcel(fileInfo);
 
-        foreach (var invoice in invoicesForCompanies)
-        {
-            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-            if (company == null)
+            foreach (var invoice in invoicesForCompanies)
             {
-                company = new CompanyViewModel(invoice.Key);
-                allData.Add(company);
+                var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+                var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+                if (company == null)
+                {
+                    company = new CompanyViewModel(invoice.Key);
+                    allData.Add(company);
+                }
+                if (errorCompany == null)
+                {
+                    errorCompany = new CompanyViewModel(invoice.Key);
+                    errorData.Add(errorCompany);
+                }
+
+                company.BookingInvoices.Clear();
+                errorCompany.BookingInvoices.Clear();
+                invoice.Value.ForEach(c =>
+                {
+                    var invoice = (InvoiceViewModel)c;
+                    company.BookingInvoices.Add(invoice);
+                    if (HasError(invoice))
+                        errorCompany.BookingInvoices.Add(invoice);
+                });
             }
-            if (errorCompany == null)
-            {
-                errorCompany = new CompanyViewModel(invoice.Key);
-                errorData.Add(errorCompany);
-            }
-
-            company.BookingInvoices.Clear();
-            errorCompany.BookingInvoices.Clear();
-            invoice.Value.ForEach(c =>
-            {
-                var invoice = (InvoiceViewModel)c;
-                company.BookingInvoices.Add(invoice);
-                if (HasError(invoice))
-                    errorCompany.BookingInvoices.Add(invoice);
-            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
         }
     }
 
     private void LoadSalaryAndTaxSourceFilePath()
     {
-        FileInfo fileInfo;
         try
         {
             if (!(SalaryAndTaxSourceFilePath.EndsWith(".xls") || SalaryAndTaxSourceFilePath.EndsWith(".xlsx")) || !File.Exists(SalaryAndTaxSourceFilePath))
                 throw new Exception();
-            fileInfo = new FileInfo(SalaryAndTaxSourceFilePath);
-        }
-        catch
-        {
-            return;
-        }
+            var fileInfo = new FileInfo(SalaryAndTaxSourceFilePath);
 
-        var invoicesForCompanies = ExcelParser.ParseSalaryAndTaxExcel(fileInfo);
+            var invoicesForCompanies = ExcelParser.ParseSalaryAndTaxExcel(fileInfo);
 
-        foreach (var invoice in invoicesForCompanies)
-        {
-            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-            if (company == null)
+            foreach (var invoice in invoicesForCompanies)
             {
-                company = new CompanyViewModel(invoice.Key);
-                allData.Add(company);
+                var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+                var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+                if (company == null)
+                {
+                    company = new CompanyViewModel(invoice.Key);
+                    allData.Add(company);
+                }
+                if (errorCompany == null)
+                {
+                    errorCompany = new CompanyViewModel(invoice.Key);
+                    errorData.Add(errorCompany);
+                }
+
+                company.SalaryAndTaxInvoices.Clear();
+                errorCompany.SalaryAndTaxInvoices.Clear();
+                invoice.Value.ForEach(c =>
+                {
+                    var invoice = (InvoiceViewModel)c;
+                    company.SalaryAndTaxInvoices.Add(invoice);
+                    if (HasError(invoice))
+                        errorCompany.SalaryAndTaxInvoices.Add(invoice);
+                });
             }
-            if (errorCompany == null)
-            {
-                errorCompany = new CompanyViewModel(invoice.Key);
-                errorData.Add(errorCompany);
-            }
-
-            company.SalaryAndTaxInvoices.Clear();
-            errorCompany.SalaryAndTaxInvoices.Clear();
-            invoice.Value.ForEach(c =>
-            {
-                var invoice = (InvoiceViewModel)c;
-                company.SalaryAndTaxInvoices.Add(invoice);
-                if (HasError(invoice))
-                    errorCompany.SalaryAndTaxInvoices.Add(invoice);
-            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
         }
     }
 
     private void LoadExpenseSourceFilePath()
     {
-        FileInfo fileInfo;
         try
         {
             if (!(ExpenseSourceFilePath.EndsWith(".xls") || ExpenseSourceFilePath.EndsWith(".xlsx")) || !File.Exists(ExpenseSourceFilePath))
                 throw new Exception();
-            fileInfo = new FileInfo(ExpenseSourceFilePath);
-        }
-        catch
-        {
-            return;
-        }
+            var fileInfo = new FileInfo(ExpenseSourceFilePath);
 
-        var invoicesForCompanies = ExcelParser.ParseExpenseExcel(fileInfo);
+            var invoicesForCompanies = ExcelParser.ParseExpenseExcel(fileInfo);
 
-        foreach (var invoice in invoicesForCompanies)
-        {
-            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-            if (company == null)
+            foreach (var invoice in invoicesForCompanies)
             {
-                company = new CompanyViewModel(invoice.Key);
-                allData.Add(company);
+                var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+                var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+                if (company == null)
+                {
+                    company = new CompanyViewModel(invoice.Key);
+                    allData.Add(company);
+                }
+                if (errorCompany == null)
+                {
+                    errorCompany = new CompanyViewModel(invoice.Key);
+                    errorData.Add(errorCompany);
+                }
+
+                company.ExpenseInvoices.Clear();
+                errorCompany.ExpenseInvoices.Clear();
+                invoice.Value.ForEach(c =>
+                {
+                    var invoice = (InvoiceViewModel)c;
+                    company.ExpenseInvoices.Add(invoice);
+                    if (HasError(invoice))
+                        errorCompany.ExpenseInvoices.Add(invoice);
+                });
             }
-            if (errorCompany == null)
-            {
-                errorCompany = new CompanyViewModel(invoice.Key);
-                errorData.Add(errorCompany);
-            }
-
-            company.ExpenseInvoices.Clear();
-            errorCompany.ExpenseInvoices.Clear();
-            invoice.Value.ForEach(c =>
-            {
-                var invoice = (InvoiceViewModel)c;
-                company.ExpenseInvoices.Add(invoice);
-                if (HasError(invoice))
-                    errorCompany.ExpenseInvoices.Add(invoice);
-            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
         }
     }
 
     private void LoadOwnerSourceFilePath()
     {
-        FileInfo fileInfo;
         try
         {
             if (!(OwnerSourceFilePath.EndsWith(".xls") || OwnerSourceFilePath.EndsWith(".xlsx")) || !File.Exists(OwnerSourceFilePath))
                 throw new Exception();
-            fileInfo = new FileInfo(OwnerSourceFilePath);
-        }
-        catch
-        {
-            return;
-        }
+            var fileInfo = new FileInfo(OwnerSourceFilePath);
 
-        var invoicesForCompanies = ExcelParser.ParseOwnerExcel(fileInfo);
+            var invoicesForCompanies = ExcelParser.ParseOwnerExcel(fileInfo);
 
-        foreach (var invoice in invoicesForCompanies)
-        {
-            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-            if (company == null)
+            foreach (var invoice in invoicesForCompanies)
             {
-                company = new CompanyViewModel(invoice.Key);
-                allData.Add(company);
+                var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+                var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+                if (company == null)
+                {
+                    company = new CompanyViewModel(invoice.Key);
+                    allData.Add(company);
+                }
+                if (errorCompany == null)
+                {
+                    errorCompany = new CompanyViewModel(invoice.Key);
+                    errorData.Add(errorCompany);
+                }
+
+                company.OwnerInvoices.Clear();
+                errorCompany.OwnerInvoices.Clear();
+                invoice.Value.ForEach(c =>
+                {
+                    var invoice = (InvoiceViewModel)c;
+                    company.OwnerInvoices.Add(invoice);
+                    if (HasError(invoice))
+                        errorCompany.OwnerInvoices.Add(invoice);
+                });
             }
-            if (errorCompany == null)
-            {
-                errorCompany = new CompanyViewModel(invoice.Key);
-                errorData.Add(errorCompany);
-            }
-
-            company.OwnerInvoices.Clear();
-            errorCompany.OwnerInvoices.Clear();
-            invoice.Value.ForEach(c =>
-            {
-                var invoice = (InvoiceViewModel)c;
-                company.OwnerInvoices.Add(invoice);
-                if (HasError(invoice))
-                    errorCompany.OwnerInvoices.Add(invoice);
-            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
         }
     }
 
     private void LoadServiceSourceFilePath()
     {
-        FileInfo fileInfo;
         try
         {
             if (!(ServiceSourceFilePath.EndsWith(".xls") || ServiceSourceFilePath.EndsWith(".xlsx")) || !File.Exists(ServiceSourceFilePath))
                 throw new Exception();
-            fileInfo = new FileInfo(ServiceSourceFilePath);
-        }
-        catch
-        {
-            return;
-        }
+            var fileInfo = new FileInfo(ServiceSourceFilePath);
 
-        var invoicesForCompanies = ExcelParser.ParseServiceExcel(fileInfo);
+            var invoicesForCompanies = ExcelParser.ParseServiceExcel(fileInfo);
 
-        foreach (var invoice in invoicesForCompanies)
-        {
-            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-            if (company == null)
+            foreach (var invoice in invoicesForCompanies)
             {
-                company = new CompanyViewModel(invoice.Key);
-                allData.Add(company);
+                var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+                var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+                if (company == null)
+                {
+                    company = new CompanyViewModel(invoice.Key);
+                    allData.Add(company);
+                }
+                if (errorCompany == null)
+                {
+                    errorCompany = new CompanyViewModel(invoice.Key);
+                    errorData.Add(errorCompany);
+                }
+
+                company.ServiceInvoices.Clear();
+                errorCompany.ServiceInvoices.Clear();
+                invoice.Value.ForEach(c =>
+                {
+                    var invoice = (InvoiceViewModel)c;
+                    company.ServiceInvoices.Add(invoice);
+                    if (HasError(invoice))
+                        errorCompany.ServiceInvoices.Add(invoice);
+                });
             }
-            if (errorCompany == null)
-            {
-                errorCompany = new CompanyViewModel(invoice.Key);
-                errorData.Add(errorCompany);
-            }
-
-            company.ServiceInvoices.Clear();
-            errorCompany.ServiceInvoices.Clear();
-            invoice.Value.ForEach(c =>
-            {
-                var invoice = (InvoiceViewModel)c;
-                company.ServiceInvoices.Add(invoice);
-                if (HasError(invoice))
-                    errorCompany.ServiceInvoices.Add(invoice);
-            });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
         }
     }
 
-    partial void OnCompanyAccountNumbersSourceFilePathChanged(string value)
+    private void LoadCompanyAccountNumbersSourceFilePath()
     {
-        FileInfo fileInfo;
         try
         {
-            if (!(value.EndsWith(".xls") || value.EndsWith(".xlsx")) || !File.Exists(value))
+            if (!(CompanyAccountNumbersSourceFilePath.EndsWith(".xls") || CompanyAccountNumbersSourceFilePath.EndsWith(".xlsx")) || !File.Exists(CompanyAccountNumbersSourceFilePath))
                 throw new Exception();
-            fileInfo = new FileInfo(value);
-        }
-        catch
-        {
-            return;
-        }
+            var fileInfo = new FileInfo(CompanyAccountNumbersSourceFilePath);
 
-        ExcelParser.SetCompanyAccountNumbers(fileInfo);
+            ExcelParser.SetCompanyAccountNumbers(fileInfo);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(ex.Message);
+        }
     }
 
     [RelayCommand]
@@ -269,6 +264,7 @@ internal partial class CSVInvoiceViewModel : ObservableObject
         allData.Clear();
         errorData.Clear();
 
+        LoadCompanyAccountNumbersSourceFilePath();
         LoadOwnerSourceFilePath();
         LoadServiceSourceFilePath();
         LoadBookingSourceFilePath();
