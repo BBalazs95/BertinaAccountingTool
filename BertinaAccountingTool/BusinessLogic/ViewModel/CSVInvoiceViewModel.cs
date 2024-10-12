@@ -34,228 +34,206 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
     private void LoadBookingSourceFilePath()
     {
-        try
+        if (!(BookingSourceFilePath.EndsWith(".xls") || BookingSourceFilePath.EndsWith(".xlsx")))
+            throw new Exception("Booking utalás nem egy excel fájl");
+        if (!File.Exists(BookingSourceFilePath))
+            throw new Exception("Booking utalás fájl nem létezik");
+
+        var fileInfo = new FileInfo(BookingSourceFilePath);
+
+        var invoicesForCompanies = ExcelParser.ParseBookingExcel(fileInfo);
+
+        foreach (var invoice in invoicesForCompanies)
         {
-            if (!(BookingSourceFilePath.EndsWith(".xls") || BookingSourceFilePath.EndsWith(".xlsx")) || !File.Exists(BookingSourceFilePath))
-                throw new Exception();
-            var fileInfo = new FileInfo(BookingSourceFilePath);
-
-            var invoicesForCompanies = ExcelParser.ParseBookingExcel(fileInfo);
-
-            foreach (var invoice in invoicesForCompanies)
+            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            if (company == null)
             {
-                var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-                var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-                if (company == null)
-                {
-                    company = new CompanyViewModel(invoice.Key);
-                    allData.Add(company);
-                }
-                if (errorCompany == null)
-                {
-                    errorCompany = new CompanyViewModel(invoice.Key);
-                    errorData.Add(errorCompany);
-                }
-
-                company.BookingInvoices.Clear();
-                errorCompany.BookingInvoices.Clear();
-                invoice.Value.ForEach(c =>
-                {
-                    var invoice = (InvoiceViewModel)c;
-                    company.BookingInvoices.Add(invoice);
-                    if (HasError(invoice))
-                        errorCompany.BookingInvoices.Add(invoice);
-                });
+                company = new CompanyViewModel(invoice.Key);
+                allData.Add(company);
             }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
+            if (errorCompany == null)
+            {
+                errorCompany = new CompanyViewModel(invoice.Key);
+                errorData.Add(errorCompany);
+            }
+
+            company.BookingInvoices.Clear();
+            errorCompany.BookingInvoices.Clear();
+            invoice.Value.ForEach(c =>
+            {
+                var invoice = (InvoiceViewModel)c;
+                company.BookingInvoices.Add(invoice);
+                if (HasError(invoice))
+                    errorCompany.BookingInvoices.Add(invoice);
+            });
         }
     }
 
     private void LoadSalaryAndTaxSourceFilePath()
     {
-        try
+        if (!(SalaryAndTaxSourceFilePath.EndsWith(".xls") || SalaryAndTaxSourceFilePath.EndsWith(".xlsx")))
+            throw new Exception("Bérek+Adók utalás nem egy excel fájl");
+        if (!File.Exists(SalaryAndTaxSourceFilePath))
+            throw new Exception("Bérek+Adók utalás fájl nem létezik");
+
+        var fileInfo = new FileInfo(SalaryAndTaxSourceFilePath);
+
+        var invoicesForCompanies = ExcelParser.ParseSalaryAndTaxExcel(fileInfo);
+
+        foreach (var invoice in invoicesForCompanies)
         {
-            if (!(SalaryAndTaxSourceFilePath.EndsWith(".xls") || SalaryAndTaxSourceFilePath.EndsWith(".xlsx")) || !File.Exists(SalaryAndTaxSourceFilePath))
-                throw new Exception();
-            var fileInfo = new FileInfo(SalaryAndTaxSourceFilePath);
-
-            var invoicesForCompanies = ExcelParser.ParseSalaryAndTaxExcel(fileInfo);
-
-            foreach (var invoice in invoicesForCompanies)
+            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            if (company == null)
             {
-                var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-                var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-                if (company == null)
-                {
-                    company = new CompanyViewModel(invoice.Key);
-                    allData.Add(company);
-                }
-                if (errorCompany == null)
-                {
-                    errorCompany = new CompanyViewModel(invoice.Key);
-                    errorData.Add(errorCompany);
-                }
-
-                company.SalaryAndTaxInvoices.Clear();
-                errorCompany.SalaryAndTaxInvoices.Clear();
-                invoice.Value.ForEach(c =>
-                {
-                    var invoice = (InvoiceViewModel)c;
-                    company.SalaryAndTaxInvoices.Add(invoice);
-                    if (HasError(invoice))
-                        errorCompany.SalaryAndTaxInvoices.Add(invoice);
-                });
+                company = new CompanyViewModel(invoice.Key);
+                allData.Add(company);
             }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
+            if (errorCompany == null)
+            {
+                errorCompany = new CompanyViewModel(invoice.Key);
+                errorData.Add(errorCompany);
+            }
+
+            company.SalaryAndTaxInvoices.Clear();
+            errorCompany.SalaryAndTaxInvoices.Clear();
+            invoice.Value.ForEach(c =>
+            {
+                var invoice = (InvoiceViewModel)c;
+                company.SalaryAndTaxInvoices.Add(invoice);
+                if (HasError(invoice))
+                    errorCompany.SalaryAndTaxInvoices.Add(invoice);
+            });
         }
     }
 
     private void LoadExpenseSourceFilePath()
     {
-        try
+        if (!(ExpenseSourceFilePath.EndsWith(".xls") || ExpenseSourceFilePath.EndsWith(".xlsx")))
+            throw new Exception("Költség utalás nem egy excel fájl");
+        if (!File.Exists(ExpenseSourceFilePath))
+            throw new Exception("Költség utalás fájl nem létezik");
+
+        var fileInfo = new FileInfo(ExpenseSourceFilePath);
+
+        var invoicesForCompanies = ExcelParser.ParseExpenseExcel(fileInfo);
+
+        foreach (var invoice in invoicesForCompanies)
         {
-            if (!(ExpenseSourceFilePath.EndsWith(".xls") || ExpenseSourceFilePath.EndsWith(".xlsx")) || !File.Exists(ExpenseSourceFilePath))
-                throw new Exception();
-            var fileInfo = new FileInfo(ExpenseSourceFilePath);
-
-            var invoicesForCompanies = ExcelParser.ParseExpenseExcel(fileInfo);
-
-            foreach (var invoice in invoicesForCompanies)
+            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            if (company == null)
             {
-                var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-                var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-                if (company == null)
-                {
-                    company = new CompanyViewModel(invoice.Key);
-                    allData.Add(company);
-                }
-                if (errorCompany == null)
-                {
-                    errorCompany = new CompanyViewModel(invoice.Key);
-                    errorData.Add(errorCompany);
-                }
-
-                company.ExpenseInvoices.Clear();
-                errorCompany.ExpenseInvoices.Clear();
-                invoice.Value.ForEach(c =>
-                {
-                    var invoice = (InvoiceViewModel)c;
-                    company.ExpenseInvoices.Add(invoice);
-                    if (HasError(invoice))
-                        errorCompany.ExpenseInvoices.Add(invoice);
-                });
+                company = new CompanyViewModel(invoice.Key);
+                allData.Add(company);
             }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
+            if (errorCompany == null)
+            {
+                errorCompany = new CompanyViewModel(invoice.Key);
+                errorData.Add(errorCompany);
+            }
+
+            company.ExpenseInvoices.Clear();
+            errorCompany.ExpenseInvoices.Clear();
+            invoice.Value.ForEach(c =>
+            {
+                var invoice = (InvoiceViewModel)c;
+                company.ExpenseInvoices.Add(invoice);
+                if (HasError(invoice))
+                    errorCompany.ExpenseInvoices.Add(invoice);
+            });
         }
     }
 
     private void LoadOwnerSourceFilePath()
     {
-        try
+        if (!(OwnerSourceFilePath.EndsWith(".xls") || OwnerSourceFilePath.EndsWith(".xlsx")))
+            throw new Exception("Tulaj utalás nem egy excel fájl");
+        if (!File.Exists(OwnerSourceFilePath))
+            throw new Exception("Tulaj utalás fájl nem létezik");
+
+        var fileInfo = new FileInfo(OwnerSourceFilePath);
+
+        var invoicesForCompanies = ExcelParser.ParseOwnerExcel(fileInfo);
+
+        foreach (var invoice in invoicesForCompanies)
         {
-            if (!(OwnerSourceFilePath.EndsWith(".xls") || OwnerSourceFilePath.EndsWith(".xlsx")) || !File.Exists(OwnerSourceFilePath))
-                throw new Exception();
-            var fileInfo = new FileInfo(OwnerSourceFilePath);
-
-            var invoicesForCompanies = ExcelParser.ParseOwnerExcel(fileInfo);
-
-            foreach (var invoice in invoicesForCompanies)
+            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            if (company == null)
             {
-                var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-                var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-                if (company == null)
-                {
-                    company = new CompanyViewModel(invoice.Key);
-                    allData.Add(company);
-                }
-                if (errorCompany == null)
-                {
-                    errorCompany = new CompanyViewModel(invoice.Key);
-                    errorData.Add(errorCompany);
-                }
-
-                company.OwnerInvoices.Clear();
-                errorCompany.OwnerInvoices.Clear();
-                invoice.Value.ForEach(c =>
-                {
-                    var invoice = (InvoiceViewModel)c;
-                    company.OwnerInvoices.Add(invoice);
-                    if (HasError(invoice))
-                        errorCompany.OwnerInvoices.Add(invoice);
-                });
+                company = new CompanyViewModel(invoice.Key);
+                allData.Add(company);
             }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
+            if (errorCompany == null)
+            {
+                errorCompany = new CompanyViewModel(invoice.Key);
+                errorData.Add(errorCompany);
+            }
+
+            company.OwnerInvoices.Clear();
+            errorCompany.OwnerInvoices.Clear();
+            invoice.Value.ForEach(c =>
+            {
+                var invoice = (InvoiceViewModel)c;
+                company.OwnerInvoices.Add(invoice);
+                if (HasError(invoice))
+                    errorCompany.OwnerInvoices.Add(invoice);
+            });
         }
     }
 
     private void LoadServiceSourceFilePath()
     {
-        try
+        if (!(ServiceSourceFilePath.EndsWith(".xls") || ServiceSourceFilePath.EndsWith(".xlsx")))
+            throw new Exception("Szolgáltatói utalás nem egy excel fájl");
+        if (!File.Exists(ServiceSourceFilePath))
+            throw new Exception("Szolgáltatói utalás fájl nem létezik");
+
+        var fileInfo = new FileInfo(ServiceSourceFilePath);
+
+        var invoicesForCompanies = ExcelParser.ParseServiceExcel(fileInfo);
+
+        foreach (var invoice in invoicesForCompanies)
         {
-            if (!(ServiceSourceFilePath.EndsWith(".xls") || ServiceSourceFilePath.EndsWith(".xlsx")) || !File.Exists(ServiceSourceFilePath))
-                throw new Exception();
-            var fileInfo = new FileInfo(ServiceSourceFilePath);
-
-            var invoicesForCompanies = ExcelParser.ParseServiceExcel(fileInfo);
-
-            foreach (var invoice in invoicesForCompanies)
+            var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
+            if (company == null)
             {
-                var company = allData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-                var errorCompany = errorData.FirstOrDefault(c => c.Name.Equals(invoice.Key, StringComparison.InvariantCultureIgnoreCase));
-                if (company == null)
-                {
-                    company = new CompanyViewModel(invoice.Key);
-                    allData.Add(company);
-                }
-                if (errorCompany == null)
-                {
-                    errorCompany = new CompanyViewModel(invoice.Key);
-                    errorData.Add(errorCompany);
-                }
-
-                company.ServiceInvoices.Clear();
-                errorCompany.ServiceInvoices.Clear();
-                invoice.Value.ForEach(c =>
-                {
-                    var invoice = (InvoiceViewModel)c;
-                    company.ServiceInvoices.Add(invoice);
-                    if (HasError(invoice))
-                        errorCompany.ServiceInvoices.Add(invoice);
-                });
+                company = new CompanyViewModel(invoice.Key);
+                allData.Add(company);
             }
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
+            if (errorCompany == null)
+            {
+                errorCompany = new CompanyViewModel(invoice.Key);
+                errorData.Add(errorCompany);
+            }
+
+            company.ServiceInvoices.Clear();
+            errorCompany.ServiceInvoices.Clear();
+            invoice.Value.ForEach(c =>
+            {
+                var invoice = (InvoiceViewModel)c;
+                company.ServiceInvoices.Add(invoice);
+                if (HasError(invoice))
+                    errorCompany.ServiceInvoices.Add(invoice);
+            });
         }
     }
 
     private void LoadCompanyAccountNumbersSourceFilePath()
     {
-        try
-        {
-            if (!(CompanyAccountNumbersSourceFilePath.EndsWith(".xls") || CompanyAccountNumbersSourceFilePath.EndsWith(".xlsx")) || !File.Exists(CompanyAccountNumbersSourceFilePath))
-                throw new Exception();
-            var fileInfo = new FileInfo(CompanyAccountNumbersSourceFilePath);
+        if (string.IsNullOrWhiteSpace(CompanyAccountNumbersSourceFilePath))
+            throw new Exception("Cég számlaszámok exel fájl megadása kötelező");
+        if (!(CompanyAccountNumbersSourceFilePath.EndsWith(".xls") || CompanyAccountNumbersSourceFilePath.EndsWith(".xlsx")))
+            throw new Exception("Cég számlaszámok nem egy excel fájl");
+        if (!File.Exists(CompanyAccountNumbersSourceFilePath))
+            throw new Exception("Cég számlaszámok fájl nem létezik");
 
-            ExcelParser.SetCompanyAccountNumbers(fileInfo);
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message);
-        }
+        var fileInfo = new FileInfo(CompanyAccountNumbersSourceFilePath);
+
+        ExcelParser.SetCompanyAccountNumbers(fileInfo);
     }
 
     [RelayCommand]
@@ -263,13 +241,28 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     {
         allData.Clear();
         errorData.Clear();
+        try
+        {
+            LoadCompanyAccountNumbersSourceFilePath();
 
-        LoadCompanyAccountNumbersSourceFilePath();
-        LoadOwnerSourceFilePath();
-        LoadServiceSourceFilePath();
-        LoadBookingSourceFilePath();
-        LoadSalaryAndTaxSourceFilePath();
-        LoadExpenseSourceFilePath();
+            if (!string.IsNullOrWhiteSpace(OwnerSourceFilePath))
+                LoadOwnerSourceFilePath();
+            if (!string.IsNullOrWhiteSpace(ServiceSourceFilePath))
+                LoadServiceSourceFilePath();
+            if (!string.IsNullOrWhiteSpace(BookingSourceFilePath))
+                LoadBookingSourceFilePath();
+            if (!string.IsNullOrWhiteSpace(SalaryAndTaxSourceFilePath))
+                LoadSalaryAndTaxSourceFilePath();
+            if (!string.IsNullOrWhiteSpace(ExpenseSourceFilePath))
+                LoadExpenseSourceFilePath();
+        }
+        catch (Exception ex)
+        {
+            allData.Clear();
+            errorData.Clear();
+            MessageBox.Show(ex.Message);
+            return;
+        }
 
         ShowedData = allData;
     }

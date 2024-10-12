@@ -19,7 +19,7 @@
             <Setter Property="Margin" Value="10"/>
             <Setter Property="AlternatingRowBackground" Value="LightGray"/>
         </Style>
-        
+
         <Style TargetType="ListBoxItem">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
@@ -83,12 +83,12 @@
         <TextBox x:Name="tbSalaryAndTax" Text="{Binding SalaryAndTaxSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="11" Margin="3"/>
         <Button Content="Browse" Grid.Column="1" Grid.Row="11" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbSalaryAndTax}"/>
 
-        <Label Content="Költség számlák excel fájl:" Grid.Row="12" Margin="3"/>
+        <Label Content="Költség utalás excel fájl:" Grid.Row="12" Margin="3"/>
         <TextBox x:Name="tbExpense" Text="{Binding ExpenseSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="13" Margin="3"/>
         <Button Content="Browse" Grid.Column="1" Grid.Row="13" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbExpense}"/>
 
         <Button Content="Betöltés" Grid.Row="14" Grid.ColumnSpan="2" Margin="3" Command="{Binding LoadDataCommand}"/>
-        
+
         <Button Content="CSV Fájlok létrehozása" Grid.Row="15" Grid.ColumnSpan="2" Margin="3" Command="{Binding CreateCSVCommand}"/>
 
         <Button Grid.Column="2" Margin="3" Content="Összes utalások" Command="{Binding ShowAllInvoiceCommand}"/>
