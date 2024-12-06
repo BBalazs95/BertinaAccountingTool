@@ -35,11 +35,12 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
-            <ColumnDefinition Width="50"/>
+            <ColumnDefinition Width="70"/>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -61,35 +62,42 @@
 
         <Label Content="Kimeneti törzs mappa:" Margin="3"/>
         <TextBox Text="{Binding RootFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="3"/>
-        <Button Content="Browse" Grid.Column="1" Grid.Row="1" Margin="3" Command="{Binding RootFolderBrowseCommand}"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="1" Margin="3" Command="{Binding RootFolderBrowseCommand}"/>
 
         <Label Content="Cég számlaszámok excel fájl:" Grid.Row="2" Margin="3"/>
         <TextBox x:Name="tbCompanyAccountNumbers" Text="{Binding CompanyAccountNumbersSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Margin="3"/>
-        <Button Content="Browse" Grid.Column="1" Grid.Row="3" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbCompanyAccountNumbers}"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="3" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbCompanyAccountNumbers}"/>
 
         <Label Content="Tulaj utalás excel fájl:" Grid.Row="4" Margin="3"/>
+        <CheckBox Content="feltöltés" Grid.Row="4" Grid.Column="1" IsChecked="{Binding IsOwnerUpload}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <TextBox x:Name="tbOwner" Text="{Binding OwnerSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Margin="3"/>
-        <Button Content="Browse" Grid.Column="1" Grid.Row="5" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbOwner}"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="5" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbOwner}"/>
 
         <Label Content="Szolgáltatói utalás excel fájl:" Grid.Row="6" Margin="3"/>
+        <CheckBox Content="feltöltés" Grid.Row="6" Grid.Column="1" IsChecked="{Binding IsServiceUpload}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <TextBox x:Name="tbService" Text="{Binding ServiceSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="7" Margin="3"/>
-        <Button Content="Browse" Grid.Column="1" Grid.Row="7" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbService}"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="7" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbService}"/>
 
         <Label Content="Booking utalás excel fájl:" Grid.Row="8" Margin="3"/>
+        <CheckBox Content="feltöltés" Grid.Row="8" Grid.Column="1" IsChecked="{Binding IsBookingUpload}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <TextBox x:Name="tbBooking" Text="{Binding BookingSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="9" Margin="3"/>
-        <Button Content="Browse" Grid.Column="1" Grid.Row="9" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbBooking}"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="9" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbBooking}"/>
 
         <Label Content="Bérek+Adók utalás excel fájl:" Grid.Row="10" Margin="3"/>
+        <CheckBox Content="feltöltés" Grid.Row="10" Grid.Column="1" IsChecked="{Binding IsSalaryAndTaxUpload}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <TextBox x:Name="tbSalaryAndTax" Text="{Binding SalaryAndTaxSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="11" Margin="3"/>
-        <Button Content="Browse" Grid.Column="1" Grid.Row="11" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbSalaryAndTax}"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="11" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbSalaryAndTax}"/>
 
-        <Label Content="Költség utalás excel fájl:" Grid.Row="12" Margin="3"/>
+        <Label Content="Költség számlák excel fájl:" Grid.Row="12" Margin="3"/>
+        <CheckBox Content="feltöltés" Grid.Row="12" Grid.Column="1" IsChecked="{Binding IsExpenseUpload}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
         <TextBox x:Name="tbExpense" Text="{Binding ExpenseSourceFilePath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="13" Margin="3"/>
-        <Button Content="Browse" Grid.Column="1" Grid.Row="13" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbExpense}"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="13" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbExpense}"/>
 
         <Button Content="Betöltés" Grid.Row="14" Grid.ColumnSpan="2" Margin="3" Command="{Binding LoadDataCommand}"/>
 
         <Button Content="CSV Fájlok létrehozása" Grid.Row="15" Grid.ColumnSpan="2" Margin="3" Command="{Binding CreateCSVCommand}"/>
+        
+        <Button Content="Feltöltés a bankba" Grid.Row="16" Grid.ColumnSpan="2" Margin="3" Command="{Binding UploadToTheBankCommand}"/>
 
         <Button Grid.Column="2" Margin="3" Content="Összes utalások" Command="{Binding ShowAllInvoiceCommand}"/>
         <Button Grid.Column="3" Margin="3" Content="Hibás utalások" Command="{Binding ShowErrorInvoiceCommand}"/>

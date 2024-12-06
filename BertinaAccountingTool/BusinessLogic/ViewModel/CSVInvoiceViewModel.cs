@@ -31,6 +31,16 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     private string expenseSourceFilePath = string.Empty;
     [ObservableProperty]
     private string rootFolder = string.Empty;
+    [ObservableProperty]
+    private bool isOwnerUpload;
+    [ObservableProperty]
+    private bool isServiceUpload;
+    [ObservableProperty]
+    private bool isBookingUpload;
+    [ObservableProperty]
+    private bool isSalaryAndTaxUpload;
+    [ObservableProperty]
+    private bool isExpenseUpload;
 
     private void LoadBookingSourceFilePath()
     {
@@ -367,6 +377,45 @@ internal partial class CSVInvoiceViewModel : ObservableObject
             if (zeroExpenseInvoices.Count() > 0)
                 ExportHelper.SaveInvoicesToExcel(zeroExpenseInvoices, $"{baseFolder}\\Költség_Számlák_Utalások_{clearCompanyName}_0.xlsx");
         }
+    }
+
+    [RelayCommand]
+    public void UploadToTheBankCommand()
+    {
+        foreach (var company in allData)
+        {
+            var baseFolder = $"{RootFolder}\\{company.Name}".Replace(".", "");
+
+            if (!Directory.Exists(baseFolder))
+            {
+                MessageBox.Show($"{baseFolder} mappa nem létezik, bitos, hogy legeneráltad a CSV fájlokat?\n(Ha igen akkor szólj Balázsnak)");
+                return;
+            }
+        }
+
+        var bankDriver = new CIBBankDriver();
+
+        bankDriver.Open();
+
+        foreach (var company in allData)
+        {
+            bankDriver.SetCompany(company.Name);
+
+            var baseFolder = $"{RootFolder}\\{company.Name}".Replace(".", "");
+
+            if (IsOwnerUpload)
+                bankDriver.UploadFile($"{baseFolder}\\Tulaj_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+            if (IsServiceUpload)
+                bankDriver.UploadFile($"{baseFolder}\\Szolgáltatói_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+            if (IsBookingUpload)
+                bankDriver.UploadFile($"{baseFolder}\\Booking_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+            if (IsSalaryAndTaxUpload)
+                bankDriver.UploadFile($"{baseFolder}\\Bérek+Adók_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+            if (IsExpenseUpload)
+                bankDriver.UploadFile($"{baseFolder}\\Költség_Számlák_Utalások_{company.Name.Replace(" ", "_").Replace(".", "")}.csv");
+        }
+
+        bankDriver.Close();
     }
 
     [RelayCommand]
