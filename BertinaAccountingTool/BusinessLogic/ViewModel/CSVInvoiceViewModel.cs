@@ -380,7 +380,7 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     }
 
     [RelayCommand]
-    public void UploadToTheBankCommand()
+    public void UploadToTheBank()
     {
         foreach (var company in allData)
         {

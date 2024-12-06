@@ -96,7 +96,7 @@
         <Button Content="Betöltés" Grid.Row="14" Grid.ColumnSpan="2" Margin="3" Command="{Binding LoadDataCommand}"/>
 
         <Button Content="CSV Fájlok létrehozása" Grid.Row="15" Grid.ColumnSpan="2" Margin="3" Command="{Binding CreateCSVCommand}"/>
-        
+
         <Button Content="Feltöltés a bankba" Grid.Row="16" Grid.ColumnSpan="2" Margin="3" Command="{Binding UploadToTheBankCommand}"/>
 
         <Button Grid.Column="2" Margin="3" Content="Összes utalások" Command="{Binding ShowAllInvoiceCommand}"/>
