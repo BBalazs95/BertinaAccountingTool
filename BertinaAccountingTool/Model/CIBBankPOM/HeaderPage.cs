@@ -24,13 +24,24 @@ namespace BertinaAccountingTool.Model.CIBBankPOM
 
         internal void SelectCompany(string name)
         {
-            if (driver.FindElement(By.XPath(string.Format(XpathToFindCompanyFromTheList, name))) is IWebElement nextCompany)
+            if (driver.FindElement(By.XPath(string.Format(XpathToFindCompanyFromTheList, name.ToUpper()))) is IWebElement nextCompany)
             {
                 nextCompany.Click();
             }
             else
             {
                 throw new Exception($"{name} company not found");
+            }
+        }
+
+        internal void TryPressOK()
+        {
+            try
+            {
+                driver.FindElement(By.XPath("//button[text()='Rendben']")).Click();
+            }
+            catch (Exception)
+            {
             }
         }
     }

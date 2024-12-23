@@ -1,12 +1,25 @@
 ﻿using BertinaAccountingTool.Model.CIBBankPOM;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using System.Windows.Input;
+using System.Windows;
+using System.Runtime.InteropServices;
 
 namespace BertinaAccountingTool.BusinessLogic.Services
 {
     internal class CIBBankDriver
     {
         private WebDriver driver;
+
+        [DllImport("user32.dll")]
+        private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
+        private const byte VK_RETURN = 0x0D; // Enter key
+        private const byte VK_CONTROL = 0x11; // Ctrl key
+        private const byte VK_V = 0x56;      // V key
+        private const uint KEYEVENTF_KEYDOWN = 0x0000;
+        private const uint KEYEVENTF_KEYUP = 0x0002;
+
 
         public CIBBankDriver()
         {
@@ -18,14 +31,18 @@ namespace BertinaAccountingTool.BusinessLogic.Services
         internal void Open()
         {
             driver.Navigate().GoToUrl("https://internetbankdemo.com/cibbusinessonline");
+            //driver.Navigate().GoToUrl("https://businessonline.cib.hu/");
 
             var logingPage = new LoginPage(driver);
 
             logingPage.ClickLoginWithoutApp();
 
             logingPage.SetVicaId("vicademo");
+            //logingPage.SetVicaId("MOVAIR:EW1WD6");
 
             logingPage.ClickLogin();
+
+            logingPage.TryPressOK();
         }
 
         internal void Close()
@@ -40,6 +57,8 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             header.OpenCompanyDropDown();
 
             header.SelectCompany(name);
+
+            header.TryPressOK();
         }
 
         internal void UploadFile(string path)
@@ -48,7 +67,17 @@ namespace BertinaAccountingTool.BusinessLogic.Services
 
             packageImportPage.MenuButtonClick();
 
-            packageImportPage.SetFilePath(path);
+            packageImportPage.PressBrowse();
+            Thread.Sleep(1000);
+
+            Clipboard.SetText(path);
+            Thread.Sleep(100);
+
+            SimulateCtrlV();
+            Thread.Sleep(100);
+
+            SimulateKeyPress(VK_RETURN);
+            Thread.Sleep(100);
 
             packageImportPage.SetGroupHUF();
 
@@ -57,6 +86,19 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             packageImportPage.SetEncodeUTF8();
 
             packageImportPage.ImportButtonClick();
+        }
+        private void SimulateCtrlV()
+        {
+            keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+            keybd_event(VK_V, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+            keybd_event(VK_V, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+            keybd_event(VK_CONTROL, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+        }
+
+        private void SimulateKeyPress(byte virtualKeyCode)
+        {
+            keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYDOWN, UIntPtr.Zero);
+            keybd_event(virtualKeyCode, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
         }
     }
 }

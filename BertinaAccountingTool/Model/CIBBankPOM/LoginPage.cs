@@ -5,7 +5,7 @@ using SeleniumExtras.WaitHelpers;
 
 namespace BertinaAccountingTool.Model.CIBBankPOM
 {
-    internal class LoginPage : BasePage
+    internal class LoginPage : HeaderPage
     {
         #region IWebElements
 

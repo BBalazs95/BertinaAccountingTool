@@ -17,11 +17,12 @@ namespace BertinaAccountingTool.Model.CIBBankPOM
         private IWebElement CurrentPageButton => driver.FindElement(By.XPath("//*[@id='funfind_select']/div[2]/ul/li[.//*[text()='Csomag importálása']]"));
         private IWebElement GroupButton => driver.FindElement(By.XPath("//*[@id=\"group_view\"]/.."));
         private IWebElement HUFSendingButton => driver.FindElement(By.XPath("//*[@id=\"group_select\"]/div/ul/li[2]"));
+        private IWebElement BrowseButton => driver.FindElement(By.XPath("//*[@id=\"file_view_group\"]/label/div"));
         private IWebElement FormatButton => driver.FindElement(By.XPath("//*[@id=\"format_view\"]/.."));
         private IWebElement CSVFromatButton => driver.FindElement(By.XPath("//*[@id=\"format_select\"]/div/ul/li[3]"));
         private IWebElement EncodeButton => driver.FindElement(By.XPath("//*[@id=\"impcharcode_view\"]/.."));
         private IWebElement UTF8Button => driver.FindElement(By.XPath("//*[@id=\"impcharcode_select\"]/div[2]/ul/li[3]"));
-        private IWebElement ImportButton => driver.FindElement(By.XPath("//*[@id=\"form1\"]/div/div[5]/div[2]/div/button"));
+        private IWebElement ImportButton => driver.FindElement(By.XPath("//button[contains(text(),'Import')]"));
 
         public PackageImportPage(IWebDriver driver) : base(driver)
         {
@@ -38,9 +39,9 @@ namespace BertinaAccountingTool.Model.CIBBankPOM
             Thread.Sleep(3000);
         }
 
-        internal void SetFilePath(string path)
+        internal void PressBrowse()
         {
-            driver.ExecuteJavaScript($"$(\"#file_name_input\").zentkval('{path}')");
+            BrowseButton.Click();
         }
 
         internal void SetGroupHUF()
