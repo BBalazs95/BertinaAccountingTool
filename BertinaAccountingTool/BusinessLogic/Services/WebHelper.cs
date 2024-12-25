@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 
 namespace BertinaAccountingTool.BusinessLogic.Services
 {
@@ -39,6 +40,18 @@ namespace BertinaAccountingTool.BusinessLogic.Services
                                         + "window.scrollBy(0, elementTop-(viewPortHeight/2));";
 
             Driver?.ExecuteJavaScript(scrollElementIntoMiddle, element);
+        }
+
+        internal static void WaitForFullPageLoad()
+        {
+            var clickableCounter = 0;
+
+            while (clickableCounter<3)
+            {
+                Wait?.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@class='banklogo']")));
+                clickableCounter++;
+                Thread.Sleep(100);
+            }
         }
     }
 }

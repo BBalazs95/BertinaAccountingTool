@@ -58,6 +58,8 @@ namespace BertinaAccountingTool.BusinessLogic.Services
 
             header.SelectCompany(name);
 
+            WebHelper.WaitForFullPageLoad();
+
             header.TryPressOK();
         }
 

@@ -30,6 +30,8 @@ namespace BertinaAccountingTool.Model.CIBBankPOM
 
         public void MenuButtonClick()
         {
+            WebHelper.WaitForFullPageLoad();
+
             SearchButton.Click();
 
             CurrentPageButton.Click();

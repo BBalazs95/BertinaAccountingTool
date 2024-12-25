@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using System.Drawing;
 
 namespace BertinaAccountingTool.Model.CIBBankPOM
 {
@@ -24,7 +25,7 @@ namespace BertinaAccountingTool.Model.CIBBankPOM
 
         internal void SelectCompany(string name)
         {
-            if (driver.FindElement(By.XPath(string.Format(XpathToFindCompanyFromTheList, name.ToUpper()))) is IWebElement nextCompany)
+            if (driver.FindElement(By.XPath(string.Format(XpathToFindCompanyFromTheList, name.Substring(0,name.IndexOf(' ')).ToUpper()))) is IWebElement nextCompany)
             {
                 nextCompany.Click();
             }
@@ -38,6 +39,13 @@ namespace BertinaAccountingTool.Model.CIBBankPOM
         {
             try
             {
+                var prevPos = driver.FindElement(By.XPath("//button[text()='Rendben']")).Location;
+                Thread.Sleep(100);
+                while (driver.FindElement(By.XPath("//button[text()='Rendben']")).Location !=prevPos)
+                {
+                    prevPos = driver.FindElement(By.XPath("//button[text()='Rendben']")).Location;
+                    Thread.Sleep(100);
+                }
                 driver.FindElement(By.XPath("//button[text()='Rendben']")).Click();
             }
             catch (Exception)
