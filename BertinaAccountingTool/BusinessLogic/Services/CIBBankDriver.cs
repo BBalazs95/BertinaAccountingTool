@@ -30,15 +30,15 @@ namespace BertinaAccountingTool.BusinessLogic.Services
 
         internal void Open()
         {
-            driver.Navigate().GoToUrl("https://internetbankdemo.com/cibbusinessonline");
-            //driver.Navigate().GoToUrl("https://businessonline.cib.hu/");
+            //driver.Navigate().GoToUrl("https://internetbankdemo.com/cibbusinessonline");
+            driver.Navigate().GoToUrl("https://businessonline.cib.hu/");
 
             var logingPage = new LoginPage(driver);
 
             logingPage.ClickLoginWithoutApp();
 
-            logingPage.SetVicaId("vicademo");
-            //logingPage.SetVicaId("MOVAIR:EW1WD6");
+            //logingPage.SetVicaId("vicademo");
+            logingPage.SetVicaId("MOVAIR:EW1WD6");
 
             logingPage.ClickLogin();
 
