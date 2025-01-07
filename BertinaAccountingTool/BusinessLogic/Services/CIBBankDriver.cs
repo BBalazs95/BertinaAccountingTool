@@ -54,40 +54,88 @@ namespace BertinaAccountingTool.BusinessLogic.Services
         {
             var header = new HeaderPage(driver);
 
-            header.OpenCompanyDropDown();
+            try
+            {
+                header.OpenCompanyDropDown();
 
-            header.SelectCompany(name);
+                header.SelectCompany(name);
 
-            WebHelper.WaitForFullPageLoad();
+                WebHelper.WaitForFullPageLoad();
 
-            header.TryPressOK();
+                header.TryPressOK();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show($"{name} cég kiválasztása nem sikerült, kérlek válaszd ki a weboldalon utánna nyomj egy okét.");
+            }
         }
 
         internal void UploadFile(string path)
         {
             var packageImportPage = new PackageImportPage(driver);
+            try
+            {
+                packageImportPage.MenuButtonClick();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Hiba lépett fel a 'Csomag importálása' menüpontra lépéskor, kérlek lépj a 'Csomag importálása' menübe majd nyomj egy okét");
+            }
 
-            packageImportPage.MenuButtonClick();
+            try
+            {
+                packageImportPage.PressBrowse();
+                Thread.Sleep(1000);
 
-            packageImportPage.PressBrowse();
-            Thread.Sleep(1000);
+                Clipboard.SetText(path);
+                Thread.Sleep(100);
 
-            Clipboard.SetText(path);
-            Thread.Sleep(100);
+                SimulateCtrlV();
+                Thread.Sleep(100);
 
-            SimulateCtrlV();
-            Thread.Sleep(100);
+                SimulateKeyPress(VK_RETURN);
+                Thread.Sleep(100);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show($"Hiba lépett fel a {path} fájl feltöltése kapcsán, kérlek tallózd be a fájlt utánna nyomj egy okét");
+            }
 
-            SimulateKeyPress(VK_RETURN);
-            Thread.Sleep(100);
+            try
+            {
+                packageImportPage.SetGroupHUF();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Hiba lépet fel a forinutalás kiválasztásakor, kérlek válaszd ki a forintátutalást utánna nyomj egy okét");
+            }
 
-            packageImportPage.SetGroupHUF();
+            try
+            {
+                packageImportPage.SetFormatCSV();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Hiba lépett fel a CSV formátum kiválasztásakor, kérlek válaszd ki a CSV formátumot utánna nyomj egy okét");
+            }
 
-            packageImportPage.SetFormatCSV();
+            try
+            {
+                packageImportPage.SetEncodeUTF8();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Hiba lépett fel az UTF8 kódolás kiválasztásakor, kérlek válaszd ki az UTF8 kódolást utánna nyomj egy okét");
+            }
 
-            packageImportPage.SetEncodeUTF8();
-
-            packageImportPage.ImportButtonClick();
+            try
+            {
+                packageImportPage.ImportButtonClick();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Hiba lépett fel az Import gomb megnyomásakor, kérlek nyomj rá az import gombra utánna nyomj egy okét");
+            }
         }
         private void SimulateCtrlV()
         {
