@@ -131,6 +131,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             try
             {
                 packageImportPage.ImportButtonClick();
+                Thread.Sleep(1000);
             }
             catch (Exception)
             {
