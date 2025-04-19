@@ -27,8 +27,7 @@ namespace BertinaAccountingTool.View
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             InitializeComponent();
-            viewModel = new CSVInvoiceViewModel();
-            DataContext = viewModel;
+            DataContext = viewModel = new CSVInvoiceViewModel();
 
             if (viewModel.LoadCommand.CanExecute(null))
                 viewModel.LoadCommand.Execute(null);

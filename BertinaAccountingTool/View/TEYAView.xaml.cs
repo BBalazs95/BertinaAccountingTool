@@ -1,28 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using BertinaAccountingTool.BusinessLogic.ViewModel;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace BertinaAccountingTool.View
+namespace BertinaAccountingTool.View;
+
+/// <summary>
+/// Interaction logic for TEYAView.xaml
+/// </summary>
+public partial class TEYAView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for TEYAView.xaml
-    /// </summary>
-    public partial class TEYAView : UserControl
+    private TEYAViewModel viewModel;
+
+    public TEYAView()
     {
-        public TEYAView()
-        {
-            InitializeComponent();
-        }
+        InitializeComponent();
+        DataContext = viewModel = new TEYAViewModel();
     }
 }

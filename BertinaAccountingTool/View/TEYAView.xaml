@@ -4,8 +4,47 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:BertinaAccountingTool.View"
-             mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800">
+             xmlns:viewmodel="clr-namespace:BertinaAccountingTool.BusinessLogic.ViewModel"
+             d:DataContext="{d:DesignInstance Type=viewmodel:TEYAViewModel}"
+             mc:Ignorable="d" d:DesignHeight="450" d:DesignWidth="800" d:Background="White">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="70"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Label Content="Vevői számlák:" Margin="3"/>
+        <TextBox Text="{Binding BuyerInvoives, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="3"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="1" Margin="3" Command="{Binding BuyerInvoivesBrowseCommand}"/>
+
+        <Label Content="Tranzakciók:" Margin="3" Grid.Row="2"/>
+        <TextBox Text="{Binding Transactions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Margin="3"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="3" Margin="3" Command="{Binding TransactionsBrowseCommand}"/>
+
+        <Label Content="Kimenet:" Margin="3" Grid.Row="4"/>
+        <TextBox Text="{Binding TransactionsOutput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Margin="3"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="5" Margin="3" Command="{Binding TransactionsOutputBrowseCommand}"/>
+
+        <Button Content="Betöltés" Grid.Row="6" Grid.ColumnSpan="2" Margin="3" Command="{Binding LoadDataCommand}"/>
+
+        <Button Content="Fájba írás" Grid.Row="7" Grid.ColumnSpan="2" Margin="3" Command="{Binding CreateTransactionsOutputCommand}"/>
+
+        <DataGrid Grid.Column="2" Grid.RowSpan="99" ItemsSource="{Binding MergedInvoices}">
             
+        </DataGrid>
     </Grid>
 </UserControl>
