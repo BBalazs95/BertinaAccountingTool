@@ -28,16 +28,16 @@
         </Grid.RowDefinitions>
 
         <Label Content="Vevői számlák:" Margin="3"/>
-        <TextBox Text="{Binding BuyerInvoives, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="3"/>
-        <Button Content="Tallózás" Grid.Column="1" Grid.Row="1" Margin="3" Command="{Binding BuyerInvoivesBrowseCommand}"/>
+        <TextBox x:Name="tbBuyerInvoives" Text="{Binding BuyerInvoives, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="3"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="1" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbBuyerInvoives}"/>
 
         <Label Content="Tranzakciók:" Margin="3" Grid.Row="2"/>
-        <TextBox Text="{Binding Transactions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Margin="3"/>
-        <Button Content="Tallózás" Grid.Column="1" Grid.Row="3" Margin="3" Command="{Binding TransactionsBrowseCommand}"/>
+        <TextBox x:Name="tbTransactions" Text="{Binding Transactions, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="3" Margin="3"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="3" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbTransactions}"/>
 
         <Label Content="Kimenet:" Margin="3" Grid.Row="4"/>
-        <TextBox Text="{Binding TransactionsOutput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Margin="3"/>
-        <Button Content="Tallózás" Grid.Column="1" Grid.Row="5" Margin="3" Command="{Binding TransactionsOutputBrowseCommand}"/>
+        <TextBox x:Name="tbTransactionsOutput" Text="{Binding TransactionsOutput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Margin="3"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="5" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbTransactionsOutput}"/>
 
         <Button Content="Betöltés" Grid.Row="6" Grid.ColumnSpan="2" Margin="3" Command="{Binding LoadDataCommand}"/>
 
