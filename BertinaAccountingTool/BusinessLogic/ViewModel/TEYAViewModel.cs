@@ -11,7 +11,7 @@ namespace BertinaAccountingTool.BusinessLogic.ViewModel;
 internal partial class TEYAViewModel : ObservableObject
 {
     [ObservableProperty]
-    private ObservableCollection<TransactionViewModel> mergedInvoices = new();
+    private ObservableCollection<TransactionViewModel> errorTransactions = new();
     [ObservableProperty]
     private string buyerInvoives = string.Empty;
     [ObservableProperty]
@@ -43,7 +43,7 @@ internal partial class TEYAViewModel : ObservableObject
 
         var fileInfo = new FileInfo(BuyerInvoives);
 
-        MergedInvoices = new ObservableCollection<TransactionViewModel>(ExcelParser.ParseBuyerInvoivesExcel(fileInfo));
+        ErrorTransactions = new ObservableCollection<TransactionViewModel>(ExcelParser.ParseBuyerInvoivesExcel(fileInfo));
     }
 
     [RelayCommand]
