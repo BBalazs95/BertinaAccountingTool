@@ -161,6 +161,26 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             return res;
         }
 
+        internal static List<TransactionViewModel> ParseTransactionsExcel(FileInfo fileInfo)
+        {
+            var res = new List<TransactionViewModel>();
+            using ExcelPackage package = new ExcelPackage(fileInfo);
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+
+            int rows = worksheet.Dimension.Rows;
+            for (int row = 2; row <= rows; row++)
+            {
+                var transaction = new TransactionViewModel(
+                    value: CleareValue(worksheet.Cells[row, 5].GetValue<double>()),
+                    date: worksheet.Cells[row, 2].GetValue<DateTime>()
+                );
+
+                res.Add(transaction);
+            }
+
+            return res;
+        }
+
         public static void SetCompanyAccountNumbers(FileInfo fileInfo)
         {
             companyAccountNumbers.Clear();

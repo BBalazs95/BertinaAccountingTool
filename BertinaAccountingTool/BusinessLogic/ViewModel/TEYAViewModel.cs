@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace BertinaAccountingTool.BusinessLogic.ViewModel;
@@ -18,6 +19,8 @@ internal partial class TEYAViewModel : ObservableObject
     private string transactions = string.Empty;
     [ObservableProperty]
     private string transactionsOutput = string.Empty;
+    private List<TransactionViewModel> allAccountNumbers = new();
+    private List<TransactionViewModel> allTransactions = new();
 
     [RelayCommand]
     public void SourceBrowse(object textBox)
@@ -37,13 +40,36 @@ internal partial class TEYAViewModel : ObservableObject
     private void LoadData()
     {
         if (!(BuyerInvoives.EndsWith(".xls") || BuyerInvoives.EndsWith(".xlsx")))
-            throw new Exception("Költség utalás nem egy excel fájl");
+            throw new Exception("Vevői számlák nem egy excel fájl");
         if (!File.Exists(BuyerInvoives))
-            throw new Exception("Költség utalás fájl nem létezik");
+            throw new Exception("Vevői számlák fájl nem létezik");
+        if (!(Transactions.EndsWith(".xls") || Transactions.EndsWith(".xlsx")))
+            throw new Exception("Tranzakciók nem egy excel fájl");
+        if (!File.Exists(Transactions))
+            throw new Exception("Tranzakciók fájl nem létezik");
 
         var fileInfo = new FileInfo(BuyerInvoives);
 
-        ErrorTransactions = new ObservableCollection<TransactionViewModel>(ExcelParser.ParseBuyerInvoivesExcel(fileInfo));
+        allAccountNumbers = ExcelParser.ParseBuyerInvoivesExcel(fileInfo);
+
+        fileInfo = new FileInfo(Transactions);
+
+        allTransactions = ExcelParser.ParseTransactionsExcel(fileInfo);
+
+        ErrorTransactions.Clear();
+        foreach (var transaction in allTransactions)
+        {
+            try
+            {
+                transaction.AccountNumber = allAccountNumbers.Single(t => t.Value == transaction.Value && t.Date.Date == transaction.Date.Date).AccountNumber;
+            }
+            catch (Exception)
+            {
+                ErrorTransactions.Add(transaction);
+            }
+        }
+        if (ErrorTransactions.Count == 0)
+            MessageBox.Show("Nincsenek hibás tranzakciók", "Hibás tranzakciók", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     [RelayCommand]
