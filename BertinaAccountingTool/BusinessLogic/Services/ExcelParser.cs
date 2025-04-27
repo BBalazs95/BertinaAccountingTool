@@ -149,7 +149,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             int rows = worksheet.Dimension.Rows;
             for (int row = 2; row <= rows; row++)
             {
-                var transaction = new TransactionViewModel(                
+                var transaction = new TransactionViewModel(index: row,
                     value: CleareValue(worksheet.Cells[row, 20].GetValue<double>()),
                     date: worksheet.Cells[row, 15].GetValue<DateTime>(),
                     accountNumber: worksheet.Cells[row, 1].GetValue<string>()
@@ -167,10 +167,10 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             using ExcelPackage package = new ExcelPackage(fileInfo);
             ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-            int rows = worksheet.Dimension.Rows-1;
+            int rows = worksheet.Dimension.Rows - 1;
             for (int row = 2; row <= rows; row++)
             {
-                var transaction = new TransactionViewModel(
+                var transaction = new TransactionViewModel(index: row,
                     value: CleareValue(worksheet.Cells[row, 5].GetValue<double>()),
                     date: worksheet.Cells[row, 2].GetValue<DateTime>()
                 );
@@ -179,6 +179,21 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             }
 
             return res;
+        }
+
+        internal static void CreateTransactionsOutputExcel(FileInfo fileInfo, List<TransactionViewModel> allTransactions)
+        {
+            using ExcelPackage package = new ExcelPackage(fileInfo);
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+
+            var col = worksheet.Dimension.Columns + 1;
+
+            foreach (var transaction in allTransactions)
+            {
+                worksheet.Cells[transaction.Index, col].Value = transaction.AccountNumber;
+            }
+
+            package.Save();
         }
 
         public static void SetCompanyAccountNumbers(FileInfo fileInfo)

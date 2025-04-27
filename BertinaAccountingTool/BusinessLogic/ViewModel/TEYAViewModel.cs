@@ -1,8 +1,10 @@
 ﻿using BertinaAccountingTool.BusinessLogic.Services;
+using BertinaAccountingTool.Model;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
@@ -78,15 +80,39 @@ internal partial class TEYAViewModel : ObservableObject
             }
             catch (Exception)
             {
+                transaction.AccountNumber = Constants.errorValue;
                 ErrorTransactions.Add(transaction);
             }
         }
         if (ErrorTransactions.Count == 0)
-            MessageBox.Show("Nincsenek hibás tranzakciók", "Hibás tranzakciók", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Nincsenek hibás tranzakciók, betöltés sikeres.", "Betöltés", MessageBoxButton.OK, MessageBoxImage.Information);
     }
 
     [RelayCommand]
     private void CreateTransactionsOutput()
     {
+        if (string.IsNullOrEmpty(TransactionsOutput))
+            throw new Exception("Nincs megadva kimeneti könyvtár");
+        if (!(Transactions.EndsWith(".xls") || Transactions.EndsWith(".xlsx")))
+            throw new Exception("Tranzakciók nem egy excel fájl");
+        if (!File.Exists(Transactions))
+            throw new Exception("Tranzakciók fájl nem létezik");
+
+        Directory.CreateDirectory(TransactionsOutput);
+
+        var newPath = $"{TransactionsOutput}\\{Path.GetFileNameWithoutExtension(Transactions)}_new{Path.GetExtension(Transactions)}";
+
+        File.Copy(Transactions, newPath, true);
+
+        var fileInfo = new FileInfo(newPath);
+
+        ExcelParser.CreateTransactionsOutputExcel(fileInfo, allTransactions);
+
+        Process.Start(new ProcessStartInfo
+        {
+            FileName = TransactionsOutput,
+            UseShellExecute = true,
+            Verb = "open"
+        });
     }
 }
