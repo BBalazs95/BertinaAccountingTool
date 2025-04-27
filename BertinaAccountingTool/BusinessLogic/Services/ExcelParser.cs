@@ -167,7 +167,7 @@ namespace BertinaAccountingTool.BusinessLogic.Services
             using ExcelPackage package = new ExcelPackage(fileInfo);
             ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-            int rows = worksheet.Dimension.Rows;
+            int rows = worksheet.Dimension.Rows-1;
             for (int row = 2; row <= rows; row++)
             {
                 var transaction = new TransactionViewModel(

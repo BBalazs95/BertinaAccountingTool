@@ -37,6 +37,19 @@ internal partial class TEYAViewModel : ObservableObject
     }
 
     [RelayCommand]
+    public void TransactionsOutputFolderBrowse()
+    {
+        OpenFolderDialog openFolderDialog = new();
+        openFolderDialog.Title = "Válasz egy törzs könyvtárat";
+        openFolderDialog.Multiselect = false;
+
+        if (openFolderDialog.ShowDialog() == true)
+        {
+            TransactionsOutput = openFolderDialog.FolderName;
+        }
+    }
+
+    [RelayCommand]
     private void LoadData()
     {
         if (!(BuyerInvoives.EndsWith(".xls") || BuyerInvoives.EndsWith(".xlsx")))

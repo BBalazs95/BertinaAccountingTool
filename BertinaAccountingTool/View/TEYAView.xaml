@@ -37,7 +37,7 @@
 
         <Label Content="Kimenet:" Margin="3" Grid.Row="4"/>
         <TextBox x:Name="tbTransactionsOutput" Text="{Binding TransactionsOutput, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="5" Margin="3"/>
-        <Button Content="Tallózás" Grid.Column="1" Grid.Row="5" Margin="3" Command="{Binding SourceBrowseCommand}" CommandParameter="{Binding ElementName=tbTransactionsOutput}"/>
+        <Button Content="Tallózás" Grid.Column="1" Grid.Row="5" Margin="3" Command="{Binding TransactionsOutputFolderBrowseCommand}"/>
 
         <Button Content="Betöltés" Grid.Row="6" Grid.ColumnSpan="2" Margin="3" Command="{Binding LoadDataCommand}"/>
 
