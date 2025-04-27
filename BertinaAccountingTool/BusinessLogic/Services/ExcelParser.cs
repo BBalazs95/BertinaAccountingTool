@@ -1,4 +1,5 @@
 ﻿using BertinaAccountingTool.BusinessLogic.Model;
+using BertinaAccountingTool.BusinessLogic.ViewModel;
 using BertinaAccountingTool.Model;
 using OfficeOpenXml;
 using System.IO;
@@ -134,6 +135,27 @@ namespace BertinaAccountingTool.BusinessLogic.Services
                     res[compName] = new List<Invoice>();
 
                 res[compName].Add(invoice);
+            }
+
+            return res;
+        }
+
+        internal static List<TransactionViewModel> ParseBuyerInvoivesExcel(FileInfo fileInfo)
+        {
+            var res = new List<TransactionViewModel>();
+            using ExcelPackage package = new ExcelPackage(fileInfo);
+            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+
+            int rows = worksheet.Dimension.Rows;
+            for (int row = 2; row <= rows; row++)
+            {
+                var transaction = new TransactionViewModel(                
+                    value: CleareValue(worksheet.Cells[row, 20].GetValue<double>()),
+                    date: worksheet.Cells[row, 15].GetValue<DateTime>(),
+                    accountNumber: worksheet.Cells[row, 1].GetValue<string>()
+                );
+
+                res.Add(transaction);
             }
 
             return res;

@@ -1,22 +1,23 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using BertinaAccountingTool.BusinessLogic.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace BertinaAccountingTool.BusinessLogic.ViewModel;
 
 internal partial class TEYAViewModel : ObservableObject
 {
     [ObservableProperty]
-    private ObservableCollection<CompanyViewModel> mergedInvoices = new();
+    private ObservableCollection<TransactionViewModel> mergedInvoices = new();
     [ObservableProperty]
-    private string? buyerInvoives;
+    private string buyerInvoives = string.Empty;
     [ObservableProperty]
-    private string? transactions;
+    private string transactions = string.Empty;
     [ObservableProperty]
-    private string? transactionsOutput;
+    private string transactionsOutput = string.Empty;
 
     [RelayCommand]
     public void SourceBrowse(object textBox)
@@ -35,6 +36,14 @@ internal partial class TEYAViewModel : ObservableObject
     [RelayCommand]
     private void LoadData()
     {
+        if (!(BuyerInvoives.EndsWith(".xls") || BuyerInvoives.EndsWith(".xlsx")))
+            throw new Exception("Költség utalás nem egy excel fájl");
+        if (!File.Exists(BuyerInvoives))
+            throw new Exception("Költség utalás fájl nem létezik");
+
+        var fileInfo = new FileInfo(BuyerInvoives);
+
+        MergedInvoices = new ObservableCollection<TransactionViewModel>(ExcelParser.ParseBuyerInvoivesExcel(fileInfo));
     }
 
     [RelayCommand]

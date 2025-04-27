@@ -43,8 +43,12 @@
 
         <Button Content="Fájba írás" Grid.Row="7" Grid.ColumnSpan="2" Margin="3" Command="{Binding CreateTransactionsOutputCommand}"/>
 
-        <DataGrid Grid.Column="2" Grid.RowSpan="99" ItemsSource="{Binding MergedInvoices}">
-            
+        <DataGrid Grid.Column="2" Grid.RowSpan="99" ItemsSource="{Binding MergedInvoices}" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Szám" Binding="{Binding AccountNumber}" />
+                <DataGridTextColumn Header="Összeg" Binding="{Binding Value}" />
+                <DataGridTextColumn Header="Számla kelte" Binding="{Binding Date}" />
+            </DataGrid.Columns>
         </DataGrid>
     </Grid>
 </UserControl>
