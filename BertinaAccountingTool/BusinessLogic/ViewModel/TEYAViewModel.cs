@@ -13,106 +13,106 @@ namespace BertinaAccountingTool.BusinessLogic.ViewModel;
 
 internal partial class TEYAViewModel : ObservableObject
 {
-    [ObservableProperty]
-    private ObservableCollection<TransactionViewModel> errorTransactions = new();
-    [ObservableProperty]
-    private string buyerInvoives = string.Empty;
-    [ObservableProperty]
-    private string transactions = string.Empty;
-    [ObservableProperty]
-    private string transactionsOutput = string.Empty;
-    private List<TransactionViewModel> allAccountNumbers = new();
-    private List<TransactionViewModel> allTransactions = new();
+	[ObservableProperty]
+	private ObservableCollection<TransactionViewModel> errorTransactions = new();
+	[ObservableProperty]
+	private string buyerInvoives = string.Empty;
+	[ObservableProperty]
+	private string transactions = string.Empty;
+	[ObservableProperty]
+	private string transactionsOutput = string.Empty;
+	private List<TransactionViewModel> allAccountNumbers = new();
+	private List<TransactionViewModel> allTransactions = new();
 
-    [RelayCommand]
-    public void SourceBrowse(object textBox)
-    {
-        OpenFileDialog openFileDialog = new();
-        openFileDialog.Filter = "Excel Files|*.xls;*.xlsx";
-        openFileDialog.Title = "Válasz egy excel fájlt";
-        openFileDialog.Multiselect = false;
+	[RelayCommand]
+	public void SourceBrowse(object textBox)
+	{
+		OpenFileDialog openFileDialog = new();
+		openFileDialog.Filter = "Excel Files|*.xls;*.xlsx";
+		openFileDialog.Title = "Válasz egy excel fájlt";
+		openFileDialog.Multiselect = false;
 
-        if (openFileDialog.ShowDialog() == true && textBox is TextBox box)
-        {
-            box.Text = openFileDialog.FileName;
-        }
-    }
+		if (openFileDialog.ShowDialog() == true && textBox is TextBox box)
+		{
+			box.Text = openFileDialog.FileName;
+		}
+	}
 
-    [RelayCommand]
-    public void TransactionsOutputFolderBrowse()
-    {
-        OpenFolderDialog openFolderDialog = new();
-        openFolderDialog.Title = "Válasz egy törzs könyvtárat";
-        openFolderDialog.Multiselect = false;
+	[RelayCommand]
+	public void TransactionsOutputFolderBrowse()
+	{
+		OpenFolderDialog openFolderDialog = new();
+		openFolderDialog.Title = "Válasz egy törzs könyvtárat";
+		openFolderDialog.Multiselect = false;
 
-        if (openFolderDialog.ShowDialog() == true)
-        {
-            TransactionsOutput = openFolderDialog.FolderName;
-        }
-    }
+		if (openFolderDialog.ShowDialog() == true)
+		{
+			TransactionsOutput = openFolderDialog.FolderName;
+		}
+	}
 
-    [RelayCommand]
-    private void LoadData()
-    {
-        if (!(BuyerInvoives.EndsWith(".xls") || BuyerInvoives.EndsWith(".xlsx")))
-            throw new Exception("Vevői számlák nem egy excel fájl");
-        if (!File.Exists(BuyerInvoives))
-            throw new Exception("Vevői számlák fájl nem létezik");
-        if (!(Transactions.EndsWith(".xls") || Transactions.EndsWith(".xlsx")))
-            throw new Exception("Tranzakciók nem egy excel fájl");
-        if (!File.Exists(Transactions))
-            throw new Exception("Tranzakciók fájl nem létezik");
+	[RelayCommand]
+	private void LoadData()
+	{
+		if (!(BuyerInvoives.EndsWith(".xls") || BuyerInvoives.EndsWith(".xlsx")))
+			throw new Exception("Vevői számlák nem egy excel fájl");
+		if (!File.Exists(BuyerInvoives))
+			throw new Exception("Vevői számlák fájl nem létezik");
+		if (!(Transactions.EndsWith(".xls") || Transactions.EndsWith(".xlsx")))
+			throw new Exception("Tranzakciók nem egy excel fájl");
+		if (!File.Exists(Transactions))
+			throw new Exception("Tranzakciók fájl nem létezik");
 
-        var fileInfo = new FileInfo(BuyerInvoives);
+		var fileInfo = new FileInfo(BuyerInvoives);
 
-        allAccountNumbers = ExcelParser.ParseBuyerInvoivesExcel(fileInfo);
+		allAccountNumbers = ExcelParser.ParseBuyerInvoivesExcel(fileInfo);
 
-        fileInfo = new FileInfo(Transactions);
+		fileInfo = new FileInfo(Transactions);
 
-        allTransactions = ExcelParser.ParseTransactionsExcel(fileInfo);
+		allTransactions = ExcelParser.ParseTransactionsExcel(fileInfo);
 
-        ErrorTransactions.Clear();
-        foreach (var transaction in allTransactions)
-        {
-            try
-            {
-                transaction.AccountNumber = allAccountNumbers.Single(t => t.Value == transaction.Value && t.Date.Date == transaction.Date.Date).AccountNumber;
-            }
-            catch (Exception)
-            {
-                transaction.AccountNumber = Constants.errorValue;
-                ErrorTransactions.Add(transaction);
-            }
-        }
-        if (ErrorTransactions.Count == 0)
-            MessageBox.Show("Nincsenek hibás tranzakciók, betöltés sikeres.", "Betöltés", MessageBoxButton.OK, MessageBoxImage.Information);
-    }
+		ErrorTransactions.Clear();
+		foreach (var transaction in allTransactions)
+		{
+			try
+			{
+				transaction.AccountNumber = allAccountNumbers.Single(t => t.Value == transaction.Value && t.Date.Date == transaction.Date.Date && !t.PaymentMethod.Contains("Készpénz", StringComparison.InvariantCultureIgnoreCase)).AccountNumber;
+			}
+			catch (Exception)
+			{
+				transaction.AccountNumber = Constants.errorValue;
+				ErrorTransactions.Add(transaction);
+			}
+		}
+		if (ErrorTransactions.Count == 0)
+			MessageBox.Show("Nincsenek hibás tranzakciók, betöltés sikeres.", "Betöltés", MessageBoxButton.OK, MessageBoxImage.Information);
+	}
 
-    [RelayCommand]
-    private void CreateTransactionsOutput()
-    {
-        if (string.IsNullOrEmpty(TransactionsOutput))
-            throw new Exception("Nincs megadva kimeneti könyvtár");
-        if (!(Transactions.EndsWith(".xls") || Transactions.EndsWith(".xlsx")))
-            throw new Exception("Tranzakciók nem egy excel fájl");
-        if (!File.Exists(Transactions))
-            throw new Exception("Tranzakciók fájl nem létezik");
+	[RelayCommand]
+	private void CreateTransactionsOutput()
+	{
+		if (string.IsNullOrEmpty(TransactionsOutput))
+			throw new Exception("Nincs megadva kimeneti könyvtár");
+		if (!(Transactions.EndsWith(".xls") || Transactions.EndsWith(".xlsx")))
+			throw new Exception("Tranzakciók nem egy excel fájl");
+		if (!File.Exists(Transactions))
+			throw new Exception("Tranzakciók fájl nem létezik");
 
-        Directory.CreateDirectory(TransactionsOutput);
+		Directory.CreateDirectory(TransactionsOutput);
 
-        var newPath = $"{TransactionsOutput}\\{Path.GetFileNameWithoutExtension(Transactions)}_new{Path.GetExtension(Transactions)}";
+		var newPath = $"{TransactionsOutput}\\{Path.GetFileNameWithoutExtension(Transactions)}_new{Path.GetExtension(Transactions)}";
 
-        File.Copy(Transactions, newPath, true);
+		File.Copy(Transactions, newPath, true);
 
-        var fileInfo = new FileInfo(newPath);
+		var fileInfo = new FileInfo(newPath);
 
-        ExcelParser.CreateTransactionsOutputExcel(fileInfo, allTransactions);
+		ExcelParser.CreateTransactionsOutputExcel(fileInfo, allTransactions);
 
-        Process.Start(new ProcessStartInfo
-        {
-            FileName = TransactionsOutput,
-            UseShellExecute = true,
-            Verb = "open"
-        });
-    }
+		Process.Start(new ProcessStartInfo
+		{
+			FileName = TransactionsOutput,
+			UseShellExecute = true,
+			Verb = "open"
+		});
+	}
 }

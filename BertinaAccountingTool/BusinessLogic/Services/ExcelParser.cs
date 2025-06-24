@@ -6,244 +6,245 @@ using System.IO;
 
 namespace BertinaAccountingTool.BusinessLogic.Services
 {
-    internal static class ExcelParser
-    {
-        private static Dictionary<string, string> companyAccountNumbers = new();
+	internal static class ExcelParser
+	{
+		private static Dictionary<string, string> companyAccountNumbers = new();
 
-        internal static Dictionary<string, List<Invoice>> ParseOwnerExcel(FileInfo fileInfo)
-        {
-            var res = new Dictionary<string, List<Invoice>>();
-            using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+		internal static Dictionary<string, List<Invoice>> ParseOwnerExcel(FileInfo fileInfo)
+		{
+			var res = new Dictionary<string, List<Invoice>>();
+			using ExcelPackage package = new ExcelPackage(fileInfo);
+			ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-            int rows = worksheet.Dimension.Rows;
-            for (int row = 2; row <= rows; row++)
-            {
-                var compName = worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
-                var invoice = new Invoice(
-                    companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", ""))),
-                    name: worksheet.Cells[row, 4].GetValue<string>(),
-                    accountNumber: CleareAccountNumber(worksheet.Cells[row, 5].GetValue<string>()),
-                    value: CleareValue(worksheet.Cells[row, 3].GetValue<double>()),
-                    message: $"Bevétel és ktg. kül. {worksheet.Cells[row, 2].GetValue<string>()} {DateTime.Now.AddMonths(-1).ToString("yyyy.MM")}");
+			int rows = worksheet.Dimension.Rows;
+			for (int row = 2; row <= rows; row++)
+			{
+				var compName = worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
+				var invoice = new Invoice(
+					companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", ""))),
+					name: worksheet.Cells[row, 4].GetValue<string>(),
+					accountNumber: CleareAccountNumber(worksheet.Cells[row, 5].GetValue<string>()),
+					value: CleareValue(worksheet.Cells[row, 3].GetValue<double>()),
+					message: $"Bevétel és ktg. kül. {worksheet.Cells[row, 2].GetValue<string>()} {DateTime.Now.AddMonths(-1).ToString("yyyy.MM")}");
 
-                if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
-                    res[compName] = new List<Invoice>();
+				if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
+					res[compName] = new List<Invoice>();
 
-                res[compName].Add(invoice);
-            }
+				res[compName].Add(invoice);
+			}
 
-            return res;
-        }
+			return res;
+		}
 
-        internal static Dictionary<string, List<Invoice>> ParseServiceExcel(FileInfo fileInfo)
-        {
-            var res = new Dictionary<string, List<Invoice>>();
-            using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+		internal static Dictionary<string, List<Invoice>> ParseServiceExcel(FileInfo fileInfo)
+		{
+			var res = new Dictionary<string, List<Invoice>>();
+			using ExcelPackage package = new ExcelPackage(fileInfo);
+			ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-            int rows = worksheet.Dimension.Rows;
-            for (int row = 2; row <= rows; row++)
-            {
-                var compName = worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
-                var invoice = new Invoice(
-                    companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", ""))),
-                    name: worksheet.Cells[row, 4].GetValue<string>(),
-                    accountNumber: CleareAccountNumber(worksheet.Cells[row, 6].GetValue<string>()),
-                    value: CleareValue(worksheet.Cells[row, 2].GetValue<double>()),
-                    message: worksheet.Cells[row, 3].GetValue<string>());
+			int rows = worksheet.Dimension.Rows;
+			for (int row = 2; row <= rows; row++)
+			{
+				var compName = worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
+				var invoice = new Invoice(
+					companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", ""))),
+					name: worksheet.Cells[row, 4].GetValue<string>(),
+					accountNumber: CleareAccountNumber(worksheet.Cells[row, 6].GetValue<string>()),
+					value: CleareValue(worksheet.Cells[row, 2].GetValue<double>()),
+					message: worksheet.Cells[row, 3].GetValue<string>());
 
-                if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
-                    res[compName] = new List<Invoice>();
+				if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
+					res[compName] = new List<Invoice>();
 
-                res[compName].Add(invoice);
-            }
+				res[compName].Add(invoice);
+			}
 
-            return res;
-        }
+			return res;
+		}
 
-        internal static Dictionary<string, List<Invoice>> ParseBookingExcel(FileInfo fileInfo)
-        {
-            var res = new Dictionary<string, List<Invoice>>();
-            using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+		internal static Dictionary<string, List<Invoice>> ParseBookingExcel(FileInfo fileInfo)
+		{
+			var res = new Dictionary<string, List<Invoice>>();
+			using ExcelPackage package = new ExcelPackage(fileInfo);
+			ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-            int rows = worksheet.Dimension.Rows;
-            for (int row = 2; row <= rows; row++)
-            {
-                var compName = worksheet.Cells[row, 5].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
-                var invoice = new Invoice(
-                    companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 5].GetValue<string>()?.Replace(".", ""))),
-                    name: "Booking.com",
-                    accountNumber: "108000077000000014509011",
-                    value: CleareValue(worksheet.Cells[row, 4].GetValue<double>()),
-                    message: $"{worksheet.Cells[row, 2].GetValue<string>()}, {worksheet.Cells[row, 3].GetValue<string>()}");
+			int rows = worksheet.Dimension.Rows;
+			for (int row = 2; row <= rows; row++)
+			{
+				var compName = worksheet.Cells[row, 5].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
+				var invoice = new Invoice(
+					companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 5].GetValue<string>()?.Replace(".", ""))),
+					name: "Booking.com",
+					accountNumber: "108000077000000014509011",
+					value: CleareValue(worksheet.Cells[row, 4].GetValue<double>()),
+					message: $"{worksheet.Cells[row, 2].GetValue<string>()}, {worksheet.Cells[row, 3].GetValue<string>()}");
 
-                if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
-                    res[compName] = new List<Invoice>();
+				if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
+					res[compName] = new List<Invoice>();
 
-                res[compName].Add(invoice);
-            }
+				res[compName].Add(invoice);
+			}
 
-            return res;
-        }
+			return res;
+		}
 
-        internal static Dictionary<string, List<Invoice>> ParseSalaryAndTaxExcel(FileInfo fileInfo)
-        {
-            var res = new Dictionary<string, List<Invoice>>();
-            using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+		internal static Dictionary<string, List<Invoice>> ParseSalaryAndTaxExcel(FileInfo fileInfo)
+		{
+			var res = new Dictionary<string, List<Invoice>>();
+			using ExcelPackage package = new ExcelPackage(fileInfo);
+			ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-            int rows = worksheet.Dimension.Rows;
-            for (int row = 2; row <= rows; row++)
-            {
-                var compName = worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
-                var invoice = new Invoice(
-                    companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", ""))),
-                    name: worksheet.Cells[row, 3].GetValue<string>(),
-                    accountNumber: CleareAccountNumber(worksheet.Cells[row, 4].GetValue<string>()),
-                    value: CleareValue(worksheet.Cells[row, 5].GetValue<double>()),
-                    message: worksheet.Cells[row, 6].GetValue<string>());
+			int rows = worksheet.Dimension.Rows;
+			for (int row = 2; row <= rows; row++)
+			{
+				var compName = worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
+				var invoice = new Invoice(
+					companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", ""))),
+					name: worksheet.Cells[row, 3].GetValue<string>(),
+					accountNumber: CleareAccountNumber(worksheet.Cells[row, 4].GetValue<string>()),
+					value: CleareValue(worksheet.Cells[row, 5].GetValue<double>()),
+					message: worksheet.Cells[row, 6].GetValue<string>());
 
-                if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
-                    res[compName] = new List<Invoice>();
+				if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
+					res[compName] = new List<Invoice>();
 
-                res[compName].Add(invoice);
-            }
+				res[compName].Add(invoice);
+			}
 
-            return res;
-        }
+			return res;
+		}
 
-        internal static Dictionary<string, List<Invoice>> ParseExpenseExcel(FileInfo fileInfo)
-        {
-            var res = new Dictionary<string, List<Invoice>>();
-            using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+		internal static Dictionary<string, List<Invoice>> ParseExpenseExcel(FileInfo fileInfo)
+		{
+			var res = new Dictionary<string, List<Invoice>>();
+			using ExcelPackage package = new ExcelPackage(fileInfo);
+			ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-            int rows = worksheet.Dimension.Rows;
-            for (int row = 2; row <= rows; row++)
-            {
-                var compName = worksheet.Cells[row, 2].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
-                var invoice = new Invoice(
-                    companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 2].GetValue<string>()?.Replace(".", ""))),
-                    name: worksheet.Cells[row, 6].GetValue<string>(),
-                    accountNumber: CleareAccountNumber(worksheet.Cells[row, 7].GetValue<string>()),
-                    value: CleareValue(worksheet.Cells[row, 4].GetValue<double>()),
-                    message: worksheet.Cells[row, 1].GetValue<string>());
+			int rows = worksheet.Dimension.Rows;
+			for (int row = 2; row <= rows; row++)
+			{
+				var compName = worksheet.Cells[row, 2].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
+				var invoice = new Invoice(
+					companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 2].GetValue<string>()?.Replace(".", ""))),
+					name: worksheet.Cells[row, 6].GetValue<string>(),
+					accountNumber: CleareAccountNumber(worksheet.Cells[row, 7].GetValue<string>()),
+					value: CleareValue(worksheet.Cells[row, 4].GetValue<double>()),
+					message: worksheet.Cells[row, 1].GetValue<string>());
 
-                if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
-                    res[compName] = new List<Invoice>();
+				if (!res.Keys.Any(n => n.Equals(compName, StringComparison.InvariantCultureIgnoreCase)))
+					res[compName] = new List<Invoice>();
 
-                res[compName].Add(invoice);
-            }
+				res[compName].Add(invoice);
+			}
 
-            return res;
-        }
+			return res;
+		}
 
-        internal static List<TransactionViewModel> ParseBuyerInvoivesExcel(FileInfo fileInfo)
-        {
-            var res = new List<TransactionViewModel>();
-            using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+		internal static List<TransactionViewModel> ParseBuyerInvoivesExcel(FileInfo fileInfo)
+		{
+			var res = new List<TransactionViewModel>();
+			using ExcelPackage package = new ExcelPackage(fileInfo);
+			ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-            int rows = worksheet.Dimension.Rows;
-            for (int row = 2; row <= rows; row++)
-            {
-                var transaction = new TransactionViewModel(index: row,
-                    value: CleareValue(worksheet.Cells[row, 20].GetValue<double>()),
-                    date: worksheet.Cells[row, 15].GetValue<DateTime>(),
-                    accountNumber: worksheet.Cells[row, 1].GetValue<string>()
-                );
+			int rows = worksheet.Dimension.Rows;
+			for (int row = 2; row <= rows; row++)
+			{
+				var transaction = new TransactionViewModel(index: row,
+					value: CleareValue(worksheet.Cells[row, 20].GetValue<double>()),
+					date: worksheet.Cells[row, 15].GetValue<DateTime>(),
+					accountNumber: worksheet.Cells[row, 1].GetValue<string>(),
+					paymentMethod: worksheet.Cells[row, 36].GetValue<string>()
+				);
 
-                res.Add(transaction);
-            }
+				res.Add(transaction);
+			}
 
-            return res;
-        }
+			return res;
+		}
 
-        internal static List<TransactionViewModel> ParseTransactionsExcel(FileInfo fileInfo)
-        {
-            var res = new List<TransactionViewModel>();
-            using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+		internal static List<TransactionViewModel> ParseTransactionsExcel(FileInfo fileInfo)
+		{
+			var res = new List<TransactionViewModel>();
+			using ExcelPackage package = new ExcelPackage(fileInfo);
+			ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-            int rows = worksheet.Dimension.Rows - 1;
-            for (int row = 2; row <= rows; row++)
-            {
-                var transaction = new TransactionViewModel(index: row,
-                    value: CleareValue(worksheet.Cells[row, 5].GetValue<double>()),
-                    date: worksheet.Cells[row, 2].GetValue<DateTime>()
-                );
+			int rows = worksheet.Dimension.Rows - 1;
+			for (int row = 2; row <= rows; row++)
+			{
+				var transaction = new TransactionViewModel(index: row,
+					value: CleareValue(worksheet.Cells[row, 5].GetValue<double>()),
+					date: worksheet.Cells[row, 2].GetValue<DateTime>()
+				);
 
-                res.Add(transaction);
-            }
+				res.Add(transaction);
+			}
 
-            return res;
-        }
+			return res;
+		}
 
-        internal static void CreateTransactionsOutputExcel(FileInfo fileInfo, List<TransactionViewModel> allTransactions)
-        {
-            using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+		internal static void CreateTransactionsOutputExcel(FileInfo fileInfo, List<TransactionViewModel> allTransactions)
+		{
+			using ExcelPackage package = new ExcelPackage(fileInfo);
+			ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-            var col = worksheet.Dimension.Columns + 1;
+			var col = worksheet.Dimension.Columns + 1;
 
-            foreach (var transaction in allTransactions)
-            {
-                worksheet.Cells[transaction.Index, col].Value = transaction.AccountNumber;
-            }
+			foreach (var transaction in allTransactions)
+			{
+				worksheet.Cells[transaction.Index, col].Value = transaction.AccountNumber;
+			}
 
-            package.Save();
-        }
+			package.Save();
+		}
 
-        public static void SetCompanyAccountNumbers(FileInfo fileInfo)
-        {
-            companyAccountNumbers.Clear();
-            using ExcelPackage package = new ExcelPackage(fileInfo);
-            ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
+		public static void SetCompanyAccountNumbers(FileInfo fileInfo)
+		{
+			companyAccountNumbers.Clear();
+			using ExcelPackage package = new ExcelPackage(fileInfo);
+			ExcelWorksheet worksheet = package.Workbook.Worksheets[0];
 
-            int rows = worksheet.Dimension.Rows;
-            for (int row = 1; row <= rows; row++)
-            {
-                var compName = worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
-                var accountNumber = worksheet.Cells[row, 2].GetValue<string>();
+			int rows = worksheet.Dimension.Rows;
+			for (int row = 1; row <= rows; row++)
+			{
+				var compName = worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
+				var accountNumber = worksheet.Cells[row, 2].GetValue<string>();
 
-                companyAccountNumbers[compName] = accountNumber;
-            }
-        }
+				companyAccountNumbers[compName] = accountNumber;
+			}
+		}
 
-        private static string GetAccountNumber(string? companyName)
-        {
-            if (companyName == null)
-                return Constants.errorValue;
+		private static string GetAccountNumber(string? companyName)
+		{
+			if (companyName == null)
+				return Constants.errorValue;
 
-            if (companyAccountNumbers.Keys.FirstOrDefault(n => n.Equals(companyName, StringComparison.InvariantCultureIgnoreCase)) is string savedCompanyName)
-                return companyAccountNumbers[savedCompanyName];
+			if (companyAccountNumbers.Keys.FirstOrDefault(n => n.Equals(companyName, StringComparison.InvariantCultureIgnoreCase)) is string savedCompanyName)
+				return companyAccountNumbers[savedCompanyName];
 
-            return Constants.errorValue;
-        }
+			return Constants.errorValue;
+		}
 
-        private static string CleareAccountNumber(string accountNumber)
-        {
-            if (accountNumber == null)
-                return Constants.errorValue;
+		private static string CleareAccountNumber(string accountNumber)
+		{
+			if (accountNumber == null)
+				return Constants.errorValue;
 
-            accountNumber = accountNumber.Trim();
-            accountNumber = accountNumber.Replace("-", "");
-            if (accountNumber.Length == 16)
-                accountNumber += Constants.last8Digit;
-            if (accountNumber.Length < 24)
-                accountNumber = Constants.errorValue;
+			accountNumber = accountNumber.Trim();
+			accountNumber = accountNumber.Replace("-", "");
+			if (accountNumber.Length == 16)
+				accountNumber += Constants.last8Digit;
+			if (accountNumber.Length < 24)
+				accountNumber = Constants.errorValue;
 
-            return accountNumber;
-        }
+			return accountNumber;
+		}
 
-        private static string CleareValue(double value)
-        {
-            value = Math.Abs(value);
-            value = Math.Round(value, 0);
+		private static string CleareValue(double value)
+		{
+			value = Math.Abs(value);
+			value = Math.Round(value, 0);
 
-            return value.ToString("F0");
-        }
-    }
+			return value.ToString("F0");
+		}
+	}
 }
