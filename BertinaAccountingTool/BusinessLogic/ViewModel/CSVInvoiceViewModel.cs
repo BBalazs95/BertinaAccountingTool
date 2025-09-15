@@ -319,11 +319,10 @@ internal partial class CSVInvoiceViewModel : ObservableObject
     private IEnumerable<InvoiceViewModel> MinifyInvoice(IEnumerable<InvoiceViewModel> invoices)
     {
         var result = new List<InvoiceViewModel>();
-        foreach (var group in invoices.GroupBy(i => i.Name))
+        foreach (var group in invoices.GroupBy(i => (i.Name, i.AccountNumber)))
         {
             var message = "";
             var value = 0m;
-
             foreach (var invoice in group)
             {
                 if (message.Length + invoice.Message.Length > 140)
@@ -333,10 +332,10 @@ internal partial class CSVInvoiceViewModel : ObservableObject
 
                     result.Add(new InvoiceViewModel
                     (
-                        group.First().CompanyAccountNumber,
+                        invoice.CompanyAccountNumber,
                         value.ToString(),
-                        group.Key,
-                        group.First().AccountNumber,
+                        group.Key.Name,
+                        group.Key.AccountNumber,
                         message
                     ));
                     message = "";
@@ -355,8 +354,8 @@ internal partial class CSVInvoiceViewModel : ObservableObject
                 (
                     group.First().CompanyAccountNumber,
                     value.ToString(),
-                    group.Key,
-                    group.First().AccountNumber,
+                    group.Key.Name,
+                    group.Key.AccountNumber,
                     message
                 ));
             }
@@ -409,7 +408,7 @@ internal partial class CSVInvoiceViewModel : ObservableObject
             var zeroSalaryAndTaxInvoices = company.SalaryAndTaxInvoices.Where(i => !HasError(i) && i.Value == "0");
             var errorSalaryAndTaxInvoices = company.SalaryAndTaxInvoices.Where(HasError);
             if (rightSalaryAndTaxInvoices.Count() > 0)
-                ExportHelper.SaveInvoicesToCsv(MinifyInvoice(rightSalaryAndTaxInvoices), $"{baseFolder}\\Bérek+Adók_Utalások_{clearCompanyName}.csv");
+                ExportHelper.SaveInvoicesToCsv(MinifyInvoice(rightSalaryAndTaxInvoices.ToList()), $"{baseFolder}\\Bérek+Adók_Utalások_{clearCompanyName}.csv");
             if (errorSalaryAndTaxInvoices.Count() > 0)
                 ExportHelper.SaveInvoicesToExcel(MinifyInvoice(errorSalaryAndTaxInvoices), $"{baseFolder}\\Bérek+Adók_Utalások_{clearCompanyName}_hiba.xlsx");
             if (zeroSalaryAndTaxInvoices.Count() > 0)
