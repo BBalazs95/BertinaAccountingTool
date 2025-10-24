@@ -325,7 +325,7 @@ internal partial class CSVInvoiceViewModel : ObservableObject
             var value = 0m;
             foreach (var invoice in group)
             {
-                if (message.Length + invoice.Message.Length > 140)
+                if (message.Length + invoice.Message.Length > 100)
                 {
                     if (message.EndsWith(","))
                         message = message[..^1];
