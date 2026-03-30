@@ -10,6 +10,14 @@ namespace BertinaAccountingTool.BusinessLogic.Services
 	{
 		private static Dictionary<string, string> companyAccountNumbers = new();
 
+		private static bool IsRowEmpty(ExcelWorksheet worksheet, int row)
+		{
+			for (int col = 1; col <= worksheet.Dimension.Columns; col++)
+				if (!string.IsNullOrWhiteSpace(worksheet.Cells[row, col].GetValue<string>()))
+					return false;
+			return true;
+		}
+
 		internal static Dictionary<string, List<Invoice>> ParseOwnerExcel(FileInfo fileInfo)
 		{
 			var res = new Dictionary<string, List<Invoice>>();
@@ -19,6 +27,9 @@ namespace BertinaAccountingTool.BusinessLogic.Services
 			int rows = worksheet.Dimension.Rows;
 			for (int row = 2; row <= rows; row++)
 			{
+				if (IsRowEmpty(worksheet, row))
+					continue;
+
 				var compName = worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
 				var invoice = new Invoice(
 					companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", ""))),
@@ -45,6 +56,9 @@ namespace BertinaAccountingTool.BusinessLogic.Services
 			int rows = worksheet.Dimension.Rows;
 			for (int row = 2; row <= rows; row++)
 			{
+				if (IsRowEmpty(worksheet, row))
+					continue;
+
 				var compName = worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
 				var invoice = new Invoice(
 					companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", ""))),
@@ -71,6 +85,9 @@ namespace BertinaAccountingTool.BusinessLogic.Services
 			int rows = worksheet.Dimension.Rows;
 			for (int row = 2; row <= rows; row++)
 			{
+				if (IsRowEmpty(worksheet, row))
+					continue;
+
 				var compName = worksheet.Cells[row, 5].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
 				var invoice = new Invoice(
 					companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 5].GetValue<string>()?.Replace(".", ""))),
@@ -97,6 +114,9 @@ namespace BertinaAccountingTool.BusinessLogic.Services
 			int rows = worksheet.Dimension.Rows;
 			for (int row = 2; row <= rows; row++)
 			{
+				if (IsRowEmpty(worksheet, row))
+					continue;
+
 				var compName = worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
 				var invoice = new Invoice(
 					companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 1].GetValue<string>()?.Replace(".", ""))),
@@ -123,6 +143,9 @@ namespace BertinaAccountingTool.BusinessLogic.Services
 			int rows = worksheet.Dimension.Rows;
 			for (int row = 2; row <= rows; row++)
 			{
+				if (IsRowEmpty(worksheet, row))
+					continue;
+
 				var compName = worksheet.Cells[row, 2].GetValue<string>()?.Replace(".", "") ?? Constants.errorValue;
 				var invoice = new Invoice(
 					companyAccountNumber: CleareAccountNumber(GetAccountNumber(worksheet.Cells[row, 2].GetValue<string>()?.Replace(".", ""))),
@@ -149,6 +172,9 @@ namespace BertinaAccountingTool.BusinessLogic.Services
 			int rows = worksheet.Dimension.Rows;
 			for (int row = 2; row <= rows; row++)
 			{
+				if (IsRowEmpty(worksheet, row))
+					continue;
+
 				var transaction = new TransactionViewModel(index: row,
 					value: CleareValue(worksheet.Cells[row, 20].GetValue<double>()),
 					date: worksheet.Cells[row, 15].GetValue<DateTime>(),
@@ -171,6 +197,9 @@ namespace BertinaAccountingTool.BusinessLogic.Services
 			int rows = worksheet.Dimension.Rows - 1;
 			for (int row = 2; row <= rows; row++)
 			{
+				if (IsRowEmpty(worksheet, row))
+					continue;
+
 				var transaction = new TransactionViewModel(index: row,
 					value: CleareValue(worksheet.Cells[row, 5].GetValue<double>()),
 					date: worksheet.Cells[row, 2].GetValue<DateTime>()
